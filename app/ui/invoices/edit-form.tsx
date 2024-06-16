@@ -12,6 +12,15 @@ import { Button } from '@/app/ui/button';
 import { updateInvoice } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 
+type State = {
+  errors?: {
+    customerId?: string[];
+    amount?: string[];
+    status?: string[];
+  };
+  message: string;
+};
+
 export default function EditInvoiceForm({
   invoice,
   customers,
@@ -19,8 +28,8 @@ export default function EditInvoiceForm({
   invoice: InvoiceForm;
   customers: CustomerField[];
 }) {
-  const initialState = { message: null, errors: {} };
-  const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
+  const initialState: State = { message: '', errors: {} };
+  const updateInvoiceWithId = async (prevState: State, formData: FormData) => updateInvoice(invoice.id, prevState, formData);
   const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
 
   return (

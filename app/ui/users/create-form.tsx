@@ -10,9 +10,18 @@ import { Button } from '@/app/ui/button';
 import { createUser } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 
+export type State1 = {
+  errors?: {
+    name?: string[];
+    email?: string[];
+    password?: string[];
+  };
+  message: string | null;
+};
+
 export default function Form() {
-  const initialState = { message: null, errors: {} };
-  const [state, dispatch] = useFormState(createUser, initialState);
+  const initialState: State1 = { message: '', errors: {} };
+  const [state, dispatch] = useFormState(async (prevState: State1, formData: FormData) => createUser(prevState, formData), initialState);
 
   return (
     <form action={dispatch}>
@@ -30,12 +39,21 @@ export default function Form() {
                 type="text"
                 placeholder="Enter Name"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="amount-error"
+                aria-describedby="name-error"
               />
               <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+          <div id="name-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.name &&
+              state.errors.name.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div>
         </div>
+
         {/* Email */}
         <div className="mb-4">
           <label htmlFor="email" className="mb-2 block text-sm font-medium">
@@ -49,30 +67,48 @@ export default function Form() {
                 type="text"
                 placeholder="Enter Email"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="email-error"
               />
               <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+          <div id="email-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.email &&
+              state.errors.email.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div>
         </div>
+
         {/* Password */}
         <div className="mb-4">
           <label htmlFor="password" className="mb-2 block text-sm font-medium">
-          Password
+            Password
           </label>
           <div className="relative mt-2 rounded-md">
             <div className="relative">
               <input
                 id="password"
                 name="password"
-                type="password"
+                type="text"
                 placeholder="Enter password"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="password-error"
               />
               <EnvelopeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+          <div id="password-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.password &&
+              state.errors.password.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div>
         </div>
-
 
         <div aria-live="polite" aria-atomic="true">
           {state.message ? (
