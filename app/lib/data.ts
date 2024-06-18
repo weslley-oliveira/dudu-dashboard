@@ -7,6 +7,7 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
+  Vehicle,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -126,6 +127,60 @@ export async function fetchFilteredInvoices(
     throw new Error('Failed to fetch invoices.');
   }
 }
+export async function fetchFilteredVehicles(
+  query: string,
+  currentPage: number,
+) {
+  noStore();
+  const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+
+  try {
+    const vehicles = await sql`
+      SELECT
+        VRN,
+        Make,
+        te,
+        Series,
+        mileage,
+        observacoes,
+        ModelVariant,
+        EngineCapacity,
+        SysSetupDate,
+        Vin,
+        EngineNumber,
+        FuelType,
+        status,
+        availability,
+        company_id,
+        YearOfManufacture
+      FROM vehicles
+      WHERE
+        VRN ILIKE ${`%${query}%`} OR
+        Make ILIKE ${`%${query}%`} OR
+        te ILIKE ${`%${query}%`} OR
+        Series ILIKE ${`%${query}%`} OR
+        mileage::text ILIKE ${`%${query}%`} OR
+        observacoes ILIKE ${`%${query}%`} OR
+        ModelVariant ILIKE ${`%${query}%`} OR
+        EngineCapacity ILIKE ${`%${query}%`} OR
+        SysSetupDate::text ILIKE ${`%${query}%`} OR
+        Vin ILIKE ${`%${query}%`} OR
+        EngineNumber ILIKE ${`%${query}%`} OR
+        FuelType ILIKE ${`%${query}%`} OR
+        status ILIKE ${`%${query}%`} OR
+        availability ILIKE ${`%${query}%`} OR
+        company_id::text ILIKE ${`%${query}%`} OR
+        YearOfManufacture::text ILIKE ${`%${query}%`}
+      ORDER BY SysSetupDate DESC
+      LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
+    `;
+
+    return vehicles.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch vehicles.');
+  }
+}
 export async function fetchFilteredUsers(query: string, currentPage: number) {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -213,6 +268,47 @@ export async function fetchInvoiceById(id: string) {
     throw new Error('Failed to fetch invoice.');
   }
 }
+
+export async function fetchVehicleByVRN(vrn: string) {
+  noStore();
+  try {
+    const data = await sql<Vehicle>`
+      SELECT
+      VRN,
+      Make,
+      te,
+      Series,
+      mileage,
+      observacoes,
+      ModelVariant,
+      EngineCapacity,
+      SysSetupDate,
+      Vin,
+      EngineNumber,
+      FuelType,
+      status,
+      availability,
+      company_id,
+      YearOfManufacture
+      FROM vehicles
+      WHERE vrn = ${vrn};
+    `;
+
+    if (data.rows.length === 0) {
+      throw new Error('Vehicle not found.');
+    }
+
+    const vehicle = data.rows.map((vehicle) => ({
+      ...vehicle
+    }));
+
+    return vehicle[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch vehicle.');
+  }
+}
+
 export async function fetchUserById(id: string) {
   noStore();
   try {

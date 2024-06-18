@@ -4,6 +4,7 @@ import {
   UserGroupIcon,
   HomeIcon,
   FunnelIcon,
+  PlusCircleIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -17,6 +18,11 @@ const links = [
     name: 'Seilas',
     href: '/dashboard/users',
     icon: UserGroupIcon,
+  },
+  {
+    name: 'Motos',
+    href: '/dashboard/motos',
+    icon: PlusCircleIcon,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: FunnelIcon },
 ];
