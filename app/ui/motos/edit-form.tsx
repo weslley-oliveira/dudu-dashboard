@@ -262,7 +262,7 @@ export default function EditVehicleForm({
           </div>
 
 
-          <div className="mb-4">
+          <div className="mb-4 ">
             <label htmlFor="company_id" className="mb-2 block text-sm font-medium">
               Company ID
             </label>
