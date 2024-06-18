@@ -39,23 +39,6 @@ export default function EditVehicleForm({
   console.log('HOJE', vehicle)
   return (
     <form action={dispatch}>
-      <div className="mb-4">
-        <label htmlFor="plate" className="mb-2 block text-sm font-medium">
-          Placa do Veículo:
-        </label>
-        <div className="relative flex gap-4">
-          <input
-            id="plate"
-            name="plate"
-            type="text"
-            placeholder="Enter Plate"
-            defaultValue={plate}
-            className="peer uppercase block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-            aria-describedby="plate-error"
-          />
-        </div>
-      </div>
-
       {vehicle && (
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
           <div className="mb-4">
@@ -278,22 +261,6 @@ export default function EditVehicleForm({
             </div>
           </div>
 
-          <div className="mb-4">
-            <label htmlFor="availability" className="mb-2 block text-sm font-medium">
-              Availability
-            </label>
-            <div className="relative">
-              <input
-                id="availability"
-                name="availability"
-                type="text"
-                defaultValue={vehicle.availability || ''}
-                placeholder="Enter availability"
-                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                aria-describedby="availability-error"
-              />
-            </div>
-          </div>
 
           <div className="mb-4">
             <label htmlFor="company_id" className="mb-2 block text-sm font-medium">
