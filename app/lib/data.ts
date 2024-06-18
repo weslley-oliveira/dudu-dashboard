@@ -150,7 +150,6 @@ export async function fetchFilteredVehicles(
         EngineNumber,
         FuelType,
         status,
-        availability,
         company_id,
         YearOfManufacture
       FROM vehicles
@@ -168,7 +167,6 @@ export async function fetchFilteredVehicles(
         EngineNumber ILIKE ${`%${query}%`} OR
         FuelType ILIKE ${`%${query}%`} OR
         status ILIKE ${`%${query}%`} OR
-        availability ILIKE ${`%${query}%`} OR
         company_id::text ILIKE ${`%${query}%`} OR
         YearOfManufacture::text ILIKE ${`%${query}%`}
       ORDER BY SysSetupDate DESC
