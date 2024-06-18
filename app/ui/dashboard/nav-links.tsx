@@ -6,6 +6,7 @@ import {
   FunnelIcon,
   PlusCircleIcon,
 } from '@heroicons/react/24/outline';
+import { FaMotorcycle } from "react-icons/fa";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
@@ -15,14 +16,14 @@ import clsx from 'clsx';
 const links = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
   {
-    name: 'Seilas',
+    name: 'Users',
     href: '/dashboard/users',
     icon: UserGroupIcon,
   },
   {
-    name: 'Motos',
+    name: 'Vehicles',
     href: '/dashboard/motos',
-    icon: PlusCircleIcon,
+    icon: FaMotorcycle,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: FunnelIcon },
 ];
