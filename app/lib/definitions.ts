@@ -103,6 +103,5 @@ export type Vehicle = {
   te?: string;
   mileage?: number;
   status?: string;
-  availability?: string;
   company_id?: number;
 };

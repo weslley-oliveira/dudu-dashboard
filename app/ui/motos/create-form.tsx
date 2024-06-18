@@ -54,6 +54,8 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
   console.log("AAAs", vehicleData)
   return (
     <form action={dispatch}>
+
+      {/* {PLACA Search} */}
       <div className="mb-4">
           <label htmlFor="plate" className="mb-2 block text-sm font-medium">
             Placa do Veículo:
@@ -73,9 +75,6 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 
         </div>
 
-      <div>
-        {/* {vehicleData?.make} */}
-      </div>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* VRN */}
         <div className="mb-4">
@@ -355,47 +354,32 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             <div className="flex gap-4">
               <div className="flex items-center">
                 <input
-                  id="available"
-                  name="status"
-                  type="radio"
-                  value="available"
-                  className="text-white-600 h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 focus:ring-2"
-                />
-                <label
-                  htmlFor="available"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
-                >
-                  Available <CheckIcon className="h-4 w-4" />
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
                   id="rented"
                   name="status"
                   type="radio"
                   value="rented"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                  className="text-white-600 h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 focus:ring-2"
                 />
                 <label
                   htmlFor="rented"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
                 >
-                  Rented <ClockIcon className="h-4 w-4" />
+                  rented
                 </label>
               </div>
               <div className="flex items-center">
                 <input
-                  id="under_maintenance"
+                  id="to-rent"
                   name="status"
                   type="radio"
-                  value="under_maintenance"
+                  value="to rent"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
-                  htmlFor="under_maintenance"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white"
+                  htmlFor="to-rent"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-green-500 px-3 py-1.5 text-xs font-medium text-white"
                 >
-                  Under Maintenance <ClockIcon className="h-4 w-4" />
+                  To Rent
                 </label>
               </div>
               <div className="flex items-center">
@@ -408,9 +392,24 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 />
                 <label
                   htmlFor="sold"
+                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-yellow-500 px-3 py-1.5 text-xs font-medium text-white"
+                >
+                  Sold 
+                </label>
+              </div>
+              <div className="flex items-center">
+                <input
+                  id="to-sell"
+                  name="status"
+                  type="radio"
+                  value="to-sell"
+                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
+                />
+                <label
+                  htmlFor="sold"
                   className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-medium text-white"
                 >
-                  Sold <CheckIcon className="h-4 w-4" />
+                  To Sell
                 </label>
               </div>
             </div>
@@ -425,31 +424,6 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
           </div>
         </fieldset>
 
-        {/* Availability */}
-        <div className="mb-4">
-          <label htmlFor="availability" className="mb-2 block text-sm font-medium">
-            Availability
-          </label>
-          <div className="relative">
-            <input
-              id="availability"
-              name="availability"
-              type="text"
-              placeholder="Enter availability"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="availability-error"
-            />
-          </div>
-
-          <div id="availability-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.availability &&
-              state.errors.availability.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
-          </div>
-        </div>
 
         {/* Company ID */}
         <div className="mb-4">

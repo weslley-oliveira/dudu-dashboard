@@ -109,7 +109,6 @@ export async function createVehicle(prevState: State, formData: FormData) {
     EngineNumber: formData.get('EngineNumber'),
     FuelType: formData.get('FuelType'),
     status: formData.get('status'),
-    availability: formData.get('availability'),
     company_id: Number(formData.get('company_id')),
     YearOfManufacture: Number(formData.get('YearOfManufacture')),
   });
@@ -135,7 +134,6 @@ export async function createVehicle(prevState: State, formData: FormData) {
     EngineNumber,
     FuelType,
     status,
-    availability,
     company_id,
     YearOfManufacture,
   } = validatedFields.data;
@@ -144,9 +142,9 @@ export async function createVehicle(prevState: State, formData: FormData) {
   try {
     await sql`
       INSERT INTO vehicles (
-        VRN, Make, Series, mileage, observacoes, ModelVariant, EngineCapacity, Vin, EngineNumber, FuelType, status, availability, company_id, YearOfManufacture
+        VRN, Make, Series, mileage, observacoes, ModelVariant, EngineCapacity, Vin, EngineNumber, FuelType, status, company_id, YearOfManufacture
       ) VALUES (
-        ${vrn}, ${make}, ${Series}, ${mileage}, ${observacoes}, ${modelvariant}, ${EngineCapacity}, ${Vin}, ${EngineNumber}, ${FuelType}, ${status}, ${availability}, ${company_id}, ${YearOfManufacture}
+        ${vrn}, ${make}, ${Series}, ${mileage}, ${observacoes}, ${modelvariant}, ${EngineCapacity}, ${Vin}, ${EngineNumber}, ${FuelType}, ${status}, , ${company_id}, ${YearOfManufacture}
       )
     `;
   } catch (error) {
