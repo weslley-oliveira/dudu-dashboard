@@ -26,6 +26,25 @@ export type Invoice = {
   status: 'pending' | 'paid';
 };
 
+
+export type Vehicle = {
+  vrn?: string;
+  make?: string;
+  modelvariant?: string;
+  syssetupdate?: string;
+  series?: string;
+  enginecapacity?: string;
+  observacoes?: string;
+  vin?: string;
+  yearofmanufacture?: number;
+  enginenumber?: string;
+  fueltype?: string;
+  te?: string;
+  mileage?: number;
+  status?: string;
+  company_id?: number;
+};
+
 export type Revenue = {
   month: string;
   revenue: number;
@@ -85,23 +104,4 @@ export type InvoiceForm = {
   customer_id: string;
   amount: number;
   status: 'pending' | 'paid';
-};
-
-
-export type Vehicle = {
-  vrn?: string;
-  make?: string;
-  modelvariant?: string;
-  syssetupdate?: string;
-  series?: string;
-  enginecapacity?: string;
-  observacoes?: string;
-  vin?: string;
-  yearofmanufacture?: number;
-  enginenumber?: string;
-  fueltype?: string;
-  te?: string;
-  mileage?: number;
-  status?: string;
-  company_id?: number;
 };

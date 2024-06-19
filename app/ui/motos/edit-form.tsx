@@ -2,7 +2,6 @@
 
 import { CustomerField, Vehicle } from '@/app/lib/definitions';
 import Link from 'next/link';
-import { Button } from '@/app/ui/button';
 import { updateVehicle } from '@/app/lib/actions';
 import { useFormState } from 'react-dom';
 
@@ -17,10 +16,8 @@ type State = {
 
 export default function EditVehicleForm({
   vehicle,
-  customers,
 }: {
   vehicle: Vehicle;
-  customers: CustomerField[];
 }) {
   const plate = vehicle.vrn;
   if (!plate) {
@@ -30,7 +27,6 @@ export default function EditVehicleForm({
   const updateInvoiceWithId = async (prevState: State, formData: FormData) => updateVehicle(plate, prevState, formData);
   const [state, dispatch] = useFormState(updateInvoiceWithId, initialState);
 
-  console.log('HOJE', vehicle)
   return (
     <form action={dispatch}>
       {vehicle && (

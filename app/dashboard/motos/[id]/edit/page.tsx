@@ -31,7 +31,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      <Form vehicle={vehicle} customers={customers} />
+      <Form vehicle={vehicle}/>
     </main>
   );
 }
