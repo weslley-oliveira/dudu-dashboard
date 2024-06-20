@@ -1,43 +1,43 @@
-import { UpdateVehicle, DeleteVehicle } from '@/app/ui/motos/buttons';
-import { fetchFilteredVehicles } from '@/app/lib/data';
-import { Vehicle } from '@/app/lib/definitions';
+import { UpdateCustomer, DeleteCustomer } from '@/app/ui/customers/buttons';
+import { fetchFilteredCustomers } from '@/app/lib/customers/data';
+import { formatDateToLocal } from '@/app/lib/utils';
+import Image from 'next/image';
 
-export default async function VehiclesTable({
+export default async function CustomersTable({
   query,
   currentPage,
 }: {
   query: string;
   currentPage: number;
 }) {
-  const vehicles: Vehicle[] = await fetchFilteredVehicles(query, currentPage);
+  const customers = await fetchFilteredCustomers(query, currentPage);
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {vehicles.map((vehicle: Vehicle) => (
+            {customers?.map((customer) => (
               <div
-                key={vehicle.id}
+                key={customer.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    <div className="mb-2 flex items-center">
-                      <p>{vehicle.make} {vehicle.model}</p>
-                    </div>
-                    <p className="text-sm text-gray-500">{vehicle.plate}</p>
+                    <p>{customer.name}</p>
+                    <p className="text-sm text-gray-500">{customer.email}</p>
                   </div>
-                  <p className="text-sm text-gray-500">{vehicle.status}</p>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl font-medium">{vehicle.series}</p>
-                    <p>{vehicle.engine_capacity}</p>
+                    <p className="text-xl font-medium">
+                      {customer.status}
+                    </p>
+                    <p>{customer.description}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateVehicle id={vehicle.id} />
-                    <DeleteVehicle id={vehicle.id} />
+                    <UpdateCustomer id={customer.id} />
+                    <DeleteCustomer id={customer.id} />
                   </div>
                 </div>
               </div>
@@ -47,16 +47,10 @@ export default async function VehiclesTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Plate
+                  Customer
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Make
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Model
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  MOT
+                  Email
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Status
@@ -67,30 +61,26 @@ export default async function VehiclesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {vehicles.map((vehicle: Vehicle) => (
+              {customers?.map((customer) => (
                 <tr
-                  key={vehicle.id}
+                  key={customer.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <p>{vehicle.plate}</p>
+                    <div className="flex items-center gap-3">
+                      <p>{customer.name}</p>
+                    </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.make}
+                    {customer.email}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.model}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.mot || 'N/A'}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.status}
+                    {customer.status}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateVehicle id={vehicle.id} />
-                      <DeleteVehicle id={vehicle.id} />
+                      <UpdateCustomer id={customer.id} />
+                      <DeleteCustomer id={customer.id} />
                     </div>
                   </td>
                 </tr>

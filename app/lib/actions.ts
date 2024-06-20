@@ -8,6 +8,7 @@ import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
 import bcrypt from 'bcrypt';
 import { error } from 'console';
+import { toUpperCase } from './utils';
 
 const FormSchema = z.object({
   id: z.string(),
@@ -26,24 +27,26 @@ const FormSchema = z.object({
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ date: true, id: true });
 
-
 const CreateVehicle = z.object({
-  vrn: z.string().nonempty(),
-  make: z.string().nonempty(),
-  Series: z.string().nonempty(),
-  mileage: z.number().nonnegative(),
-  observacoes: z.string().optional(),
-  modelvariant: z.string().nonempty(),
-  EngineCapacity: z.string().nonempty(),
-  Vin: z.string().nonempty(),
-  EngineNumber: z.string().nonempty(),
-  FuelType: z.string().nonempty(),
-  status: z.enum(['available', 'rented', 'under_maintenance', 'sold']),
-  availability: z.string().nonempty(),
-  company_id: z.number().int(),
-  YearOfManufacture: z.number().int().nonnegative(),
+  plate: z.string().min(1, { message: 'Plate is required' }),
+  make: z.string().min(1, { message: 'Make is required' }),
+  type: z.string().min(1, { message: 'Type is required' }),
+  series: z.string().min(1, { message: 'Series is required' }),
+  mileage: z.number().nonnegative({ message: 'Mileage must be a non-negative number' }),
+  observations: z.string().optional(),
+  model: z.string().min(1, { message: 'Model is required' }),
+  engine_capacity: z.string().min(1, { message: 'Engine Capacity is required' }),
+  vin: z.string().min(1, { message: 'VIN is required' }),
+  engine_number: z.string().min(1, { message: 'Engine Number is required' }),
+  fuel_type: z.string().min(1, { message: 'Fuel Type is required' }),
+  status: z.string().min(1, { message: 'Status is required' }),
+  company_id: z.string().optional(),
+  year_of_manufacture: z.number().int().nonnegative({ message: 'Year of Manufacture must be a non-negative integer' }),
+  mot: z.string().optional(),
+  tracker: z.boolean().optional(),
+  tracker_observation: z.string().optional(),
+  color: z.string().min(1, { message: 'Color is required' })
 });
-
 // This is temporary
 export type State = {
   errors?: {
@@ -96,59 +99,69 @@ export async function createInvoice(prevState: State, formData: FormData) {
 export async function createVehicle(prevState: State, formData: FormData) {
   // Validar os campos do formulário usando Zod
   const validatedFields = CreateVehicle.safeParse({
-    vrn: formData.get('vrn'),
+    plate: formData.get('plate'),
     make: formData.get('make'),
-    te: formData.get('te'),
-    Series: formData.get('Series'),
+    type: formData.get('type'),
+    series: formData.get('series'),
     mileage: Number(formData.get('mileage')),
-    observacoes: formData.get('observacoes'),
-    modelvariant: formData.get('modelvariant'),
-    EngineCapacity: formData.get('EngineCapacity'),
-    SysSetupDate: formData.get('SysSetupDate'),
-    Vin: formData.get('Vin'),
-    EngineNumber: formData.get('EngineNumber'),
-    FuelType: formData.get('FuelType'),
+    observations: formData.get('observations'),
+    model: formData.get('model'),
+    engine_capacity: formData.get('engine_capacity'),
+    vin: formData.get('vin'),
+    engine_number: formData.get('engine_number'),
+    fuel_type: formData.get('fuel_type'),
     status: formData.get('status'),
-    company_id: Number(formData.get('company_id')),
-    YearOfManufacture: Number(formData.get('YearOfManufacture')),
+    company_id: formData.get('company_id'),
+    year_of_manufacture: Number(formData.get('year_of_manufacture')),
+    mot: formData.get('mot'),
+    tracker: formData.get('tracker') === 'on',
+    tracker_observation: formData.get('tracker_observation'),
+    color: formData.get('color')
   });
 
   // Se a validação do formulário falhar, retornar erros imediatamente.
   if (!validatedFields.success) {
+    console.log('teste', validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: `Missing Fields. Failed to Create Vehicle.${error}`,
+      message: 'Missing Fields. Failed to Create Vehicle.',
     };
   }
 
   // Preparar os dados para inserção no banco de dados
   const {
-    vrn,
+    plate,
     make,
-    Series,
+    type,
+    series,
     mileage,
-    observacoes,
-    modelvariant,
-    EngineCapacity,
-    Vin,
-    EngineNumber,
-    FuelType,
+    observations,
+    model,
+    engine_capacity,
+    vin,
+    engine_number,
+    fuel_type,
     status,
     company_id,
-    YearOfManufacture,
+    year_of_manufacture,
+    mot,
+    tracker,
+    tracker_observation,
+    color
   } = validatedFields.data;
 
   // Inserir os dados no banco de dados
   try {
     await sql`
       INSERT INTO vehicles (
-        VRN, Make, Series, mileage, observacoes, ModelVariant, EngineCapacity, Vin, EngineNumber, FuelType, status, company_id, YearOfManufacture
+        plate, make, type, series, mileage, observations, model, engine_capacity, vin, engine_number, fuel_type, status, company_id, year_of_manufacture, mot, tracker, tracker_observation, color
       ) VALUES (
-        ${vrn}, ${make}, ${Series}, ${mileage}, ${observacoes}, ${modelvariant}, ${EngineCapacity}, ${Vin}, ${EngineNumber}, ${FuelType}, ${status}, , ${company_id}, ${YearOfManufacture}
+        ${toUpperCase(plate)}, ${make}, ${type}, ${series}, ${mileage}, ${observations}, ${model}, ${engine_capacity}, ${vin}, ${engine_number}, ${fuel_type}, ${status}, ${company_id}, ${year_of_manufacture}, ${mot}, ${tracker}, ${tracker_observation}, ${color}
       )
     `;
   } catch (error) {
     // Se ocorrer um erro no banco de dados, retornar um erro mais específico.
+    console.error('Database Error:', error);
     return {
       message: 'Database Error: Failed to Create Vehicle.',
     };
@@ -159,68 +172,73 @@ export async function createVehicle(prevState: State, formData: FormData) {
   redirect('/dashboard/motos');
 }
 
-export async function updateVehicle(
-  vrn: string,
-  prevState: State,
-  formData: FormData,
-) {
-  // Extraindo os campos do formulário
-  const vehicleData = {
-    make: formData.get('make') as string | null,
-    te: formData.get('te') as string | null,
-    series: formData.get('series') as string | null,
-    mileage: formData.get('mileage') as string | null,
-    observacoes: formData.get('observacoes') as string | null,
-    modelvariant: formData.get('modelvariant') as string | null,
-    enginecapacity: formData.get('enginecapacity') as string | null,
-    syssetupdate: formData.get('syssetupdate') as string | null,
-    vin: formData.get('vin') as string | null,
-    enginenumber: formData.get('enginenumber') as string | null,
-    fueltype: formData.get('fueltype') as string | null,
-    status: formData.get('status') as string | null,
-    availability: formData.get('availability') as string | null,
-    company_id: formData.get('company_id') as string | null,
-    yearofmanufacture: formData.get('yearofmanufacture') as string | null
-  };
 
-  // Verificando campos obrigatórios
-  for (const [key, value] of Object.entries(vehicleData)) {
-    if (!value) {
-      return {
-        errors: { [key]: [`${key} is required`] },
-        message: `Missing Fields. Failed to Update Vehicle.${error}`,
-      };
-    }
+const UpdateVehicle = z.object({
+  mileage: z.number().nonnegative({ message: 'Mileage must be a non-negative number' }),
+  observations: z.string().optional(),
+  status: z.string().min(1, { message: 'Status is required' }),
+  company_id: z.string().nullable(),
+  tracker: z.boolean(),
+  tracker_observation: z.string().optional(),
+});
+
+export async function updateVehicle(prevState: any, formData: FormData) {
+  const plate = formData.get('plate')?.toString();
+  if (!plate) {
+    return {
+      errors: { plate: ['Plate is required'] },
+      message: 'Failed to update vehicle.',
+    };
   }
+
+  const validatedFields = UpdateVehicle.safeParse({
+    mileage: Number(formData.get('mileage')),
+    observations: formData.get('observations'),
+    status: formData.get('status'),
+    company_id: formData.get('company_id'),
+    tracker: formData.get('tracker') === 'on',
+    tracker_observation: formData.get('tracker_observation'),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: 'Failed to update vehicle.',
+    };
+  }
+
+  const {
+    mileage,
+    observations,
+    status,
+    company_id,
+    tracker,
+    tracker_observation,
+  } = validatedFields.data;
 
   try {
     await sql`
       UPDATE vehicles
-      SET 
-        make = ${vehicleData.make},
-        te = ${vehicleData.te},
-        series = ${vehicleData.series},
-        mileage = ${vehicleData.mileage},
-        observacoes = ${vehicleData.observacoes},
-        modelvariant = ${vehicleData.modelvariant},
-        enginecapacity = ${vehicleData.enginecapacity},
-        syssetupdate = ${vehicleData.syssetupdate},
-        vin = ${vehicleData.vin},
-        enginenumber = ${vehicleData.enginenumber},
-        fueltype = ${vehicleData.fueltype},
-        status = ${vehicleData.status},
-        availability = ${vehicleData.availability},
-        company_id = ${vehicleData.company_id},
-        yearofmanufacture = ${vehicleData.yearofmanufacture}
-      WHERE vrn = ${vrn}
+      SET
+        mileage = ${mileage},
+        observations = ${observations},
+        status = ${status},
+        company_id = ${company_id},
+        tracker = ${tracker},
+        tracker_observation = ${tracker_observation}
+      WHERE
+        plate = ${plate}
     `;
   } catch (error) {
     console.error('Database Error:', error);
-    return { message: 'Database Error: Failed to Update Vehicle.' };
+    return {
+      message: 'Database Error: Failed to update vehicle.',
+    };
   }
 
-  revalidatePath('/dashboard/motos');
-  redirect('/dashboard/motos');
+  return {
+    message: 'Vehicle updated successfully.',
+  };
 }
 
 export async function updateInvoice(

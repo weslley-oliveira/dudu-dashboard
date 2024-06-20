@@ -16,34 +16,63 @@ export type Customer = {
   image_url: string;
 };
 
-export type Invoice = {
+export interface Vehicle {
   id: string;
-  customer_id: string;
-  amount: number;
-  date: string;
-  // In TypeScript, this is called a string union type.
-  // It means that the "status" property can only be one of the two strings: 'pending' or 'paid'.
-  status: 'pending' | 'paid';
-};
+  plate: string;
+  make: string;
+  type: string;
+  series: string;
+  mileage: number;
+  observations?: string;
+  model: string;
+  engine_capacity: string;
+  vin: string;
+  engine_number: string;
+  fuel_type: string;
+  status: string;
+  company_id?: string | null;
+  year_of_manufacture: number;
+  mot?: string;
+  tracker?: boolean;
+  tracker_observation?: string;
+  color: string;
+}
 
 
-export type Vehicle = {
-  vrn?: string;
-  make?: string;
-  modelvariant?: string;
-  syssetupdate?: string;
-  series?: string;
-  enginecapacity?: string;
-  observacoes?: string;
-  vin?: string;
-  yearofmanufacture?: number;
-  enginenumber?: string;
-  fueltype?: string;
-  te?: string;
-  mileage?: number;
-  status?: string;
-  company_id?: number;
-};
+
+export interface Vehicle {
+  id: string;
+  plate: string;
+  make: string;
+  type: string;
+  series: string;
+  mileage: number;
+  observations?: string;
+  model: string;
+  engine_capacity: string;
+  vin: string;
+  engine_number: string;
+  fuel_type: string;
+  status: string;
+  company_id?: string | null;
+  year_of_manufacture: number;
+  mot?: string;
+  tracker?: boolean;
+  tracker_observation?: string;
+  color: string;
+}
+
+export interface Product {
+  id: string;
+  product_name: string;
+  product_code: string;
+  category: string;
+  manufacturer: string;
+  price: number;
+  stock: number;
+  status: string;
+  observations: string | null;
+}
 
 export type Revenue = {
   month: string;

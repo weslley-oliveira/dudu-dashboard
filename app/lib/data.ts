@@ -8,6 +8,7 @@ import {
   User,
   Revenue,
   Vehicle,
+  Product,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -34,20 +35,24 @@ export async function fetchRevenue() {
   }
 }
 
+
+
 export async function fetchLatestInvoices() {
   noStore();
   try {
     const data = await sql<LatestInvoiceRaw>`
-      SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
+      SELECT invoices.amount, customers.name, customers.email, invoices.id
       FROM invoices
       JOIN customers ON invoices.customer_id = customers.id
       ORDER BY invoices.date DESC
-      LIMIT 5`;
+      LIMIT 5
+    `;
 
     const latestInvoices = data.rows.map((invoice) => ({
       ...invoice,
       amount: formatCurrency(invoice.amount),
     }));
+
     return latestInvoices;
   } catch (error) {
     console.error('Database Error:', error);
@@ -127,58 +132,48 @@ export async function fetchFilteredInvoices(
     throw new Error('Failed to fetch invoices.');
   }
 }
-export async function fetchFilteredVehicles(
-  query: string,
-  currentPage: number,
-) {
-  noStore();
+
+export async function fetchFilteredVehicles(query: string, currentPage: number): Promise<Vehicle[]> {
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const vehicles = await sql`
+    const result = await sql<Vehicle>`
       SELECT
-        VRN,
-        Make,
-        te,
-        Series,
+        id,
+        plate,
+        make,
+        type,
+        series,
         mileage,
-        observacoes,
-        ModelVariant,
-        EngineCapacity,
-        SysSetupDate,
-        Vin,
-        EngineNumber,
-        FuelType,
+        observations,
+        model,
+        engine_capacity,
+        vin,
+        engine_number,
+        fuel_type,
         status,
         company_id,
-        YearOfManufacture
+        year_of_manufacture,
+        tracker,
+        tracker_observation,
+        color
       FROM vehicles
       WHERE
-        VRN ILIKE ${`%${query}%`} OR
-        Make ILIKE ${`%${query}%`} OR
-        te ILIKE ${`%${query}%`} OR
-        Series ILIKE ${`%${query}%`} OR
-        mileage::text ILIKE ${`%${query}%`} OR
-        observacoes ILIKE ${`%${query}%`} OR
-        ModelVariant ILIKE ${`%${query}%`} OR
-        EngineCapacity ILIKE ${`%${query}%`} OR
-        SysSetupDate::text ILIKE ${`%${query}%`} OR
-        Vin ILIKE ${`%${query}%`} OR
-        EngineNumber ILIKE ${`%${query}%`} OR
-        FuelType ILIKE ${`%${query}%`} OR
+        plate ILIKE ${`%${query}%`} OR
+        make ILIKE ${`%${query}%`} OR
+        model ILIKE ${`%${query}%`} OR
         status ILIKE ${`%${query}%`} OR
-        company_id::text ILIKE ${`%${query}%`} OR
-        YearOfManufacture::text ILIKE ${`%${query}%`}
-      ORDER BY SysSetupDate DESC
+        year_of_manufacture::text ILIKE ${`%${query}%`}
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
-    return vehicles.rows;
+    return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch vehicles.');
   }
 }
+
 export async function fetchFilteredUsers(query: string, currentPage: number) {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -226,6 +221,29 @@ export async function fetchInvoicesPages(query: string) {
     throw new Error('Failed to fetch total number of invoices.');
   }
 }
+
+export async function fetchVehiclesPages(query: string) {
+  noStore();
+  try {
+    const count = await sql`
+      SELECT COUNT(*)
+      FROM vehicles
+      WHERE
+        plate ILIKE ${`%${query}%`} OR
+        make ILIKE ${`%${query}%`} OR
+        model ILIKE ${`%${query}%`} OR
+        status ILIKE ${`%${query}%`} OR
+        year_of_manufacture::text ILIKE ${`%${query}%`}
+    `;
+
+    const totalPages = Math.ceil(Number(count.rows[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch total number of vehicles.');
+  }
+}
+
 export async function fetchUsersPages(query: string) {
   noStore();
   try {
@@ -267,29 +285,32 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
-export async function fetchVehicleByVRN(vrn: string) {
+export async function fetchVehicleById(id: string): Promise<Vehicle> {
   noStore();
   try {
     const data = await sql<Vehicle>`
       SELECT
-      VRN,
-      Make,
-      te,
-      Series,
-      mileage,
-      observacoes,
-      ModelVariant,
-      EngineCapacity,
-      SysSetupDate,
-      Vin,
-      EngineNumber,
-      FuelType,
-      status,
-      availability,
-      company_id,
-      YearOfManufacture
+        id,
+        plate,
+        make,
+        type,
+        series,
+        mileage,
+        observations AS observacoes,
+        model AS ModelVariant,
+        engine_capacity AS EngineCapacity,
+        vin,
+        engine_number AS EngineNumber,
+        fuel_type AS FuelType,
+        status,
+        company_id,
+        year_of_manufacture AS YearOfManufacture,
+        mot,
+        tracker,
+        tracker_observation AS trackerObservation,
+        color
       FROM vehicles
-      WHERE vrn = ${vrn};
+      WHERE id = ${id};
     `;
 
     if (data.rows.length === 0) {
@@ -391,5 +412,74 @@ export async function getUser(email: string) {
   } catch (error) {
     console.error('Failed to fetch user:', error);
     throw new Error('Failed to fetch user.');
+  }
+}
+
+
+export const fetchVehicleData = async (plate: string): Promise<Vehicle> => {
+  const apiKey = '06a0f54d-44ea-404b-8978-7f519f4f4534';
+  const url = `https://uk1.ukvehicledata.co.uk/api/datapackage/VehicleAndMotHistory?v=2&api_nullitems=1&auth_apikey=${apiKey}&key_VRM=${plate}`;
+  const response = await fetch(url);
+  const data = await response.json();
+
+  console.log(response, "Ta aqui de verdade");
+
+  return {
+    id: '', // O ID será gerado pelo banco de dados
+    plate: data.Request.DataKeys.Vrm,
+    make: data.Response.DataItems.VehicleRegistration.Make,
+    model: data.Response.DataItems.SmmtDetails.ModelVariant, // Usando o Model Variant para o campo Model
+    series: data.Response.DataItems.SmmtDetails.Series,
+    engine_capacity: data.Response.DataItems.VehicleRegistration.EngineCapacity,
+    vin: data.Response.DataItems.VehicleRegistration.Vin,
+    year_of_manufacture: parseInt(data.Response.DataItems.VehicleRegistration.YearOfManufacture),
+    engine_number: data.Response.DataItems.VehicleRegistration.EngineNumber,
+    fuel_type: data.Response.DataItems.VehicleRegistration.FuelType,
+    color: data.Response.DataItems.VehicleRegistration.Colour,
+    type: data.Response.DataItems.VehicleRegistration.VehicleClass || '', // Adicionando type
+    mileage: 0,
+    status: '',
+    company_id: '',
+    observations: '',
+    mot: '',
+  };
+};
+
+export async function fetchFilteredProducts(query: string): Promise<Product[]> {
+  noStore();
+  try {
+    const data = await sql<Product>`
+      SELECT
+        id,
+        product_name,
+        product_code,
+        category,
+        manufacturer,
+        price,
+        stock,
+        status,
+        observations
+      FROM products
+      WHERE 
+        product_name ILIKE ${'%' + query + '%'}
+        OR product_code ILIKE ${'%' + query + '%'}
+        OR category ILIKE ${'%' + query + '%'}
+        OR manufacturer ILIKE ${'%' + query + '%'}
+        OR status ILIKE ${'%' + query + '%'}
+        OR observations ILIKE ${'%' + query + '%'};
+    `;
+
+    if (data.rows.length === 0) {
+      throw new Error('No products found.');
+    }
+
+    const products = data.rows.map((product) => ({
+      ...product
+    }));
+
+    return products;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch products.');
   }
 }

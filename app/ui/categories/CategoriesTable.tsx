@@ -1,43 +1,37 @@
-import { UpdateVehicle, DeleteVehicle } from '@/app/ui/motos/buttons';
-import { fetchFilteredVehicles } from '@/app/lib/data';
-import { Vehicle } from '@/app/lib/definitions';
+import { fetchFilteredCategories } from '@/app/lib/categories/data';
+import { UpdateCategory, DeleteCategory } from '@/app/ui/categories/buttons';
 
-export default async function VehiclesTable({
+export default async function CategoriesTable({
   query,
   currentPage,
 }: {
   query: string;
   currentPage: number;
 }) {
-  const vehicles: Vehicle[] = await fetchFilteredVehicles(query, currentPage);
+  const categories = await fetchFilteredCategories(query, currentPage);
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {vehicles.map((vehicle: Vehicle) => (
+            {categories?.map((category) => (
               <div
-                key={vehicle.id}
+                key={category.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    <div className="mb-2 flex items-center">
-                      <p>{vehicle.make} {vehicle.model}</p>
-                    </div>
-                    <p className="text-sm text-gray-500">{vehicle.plate}</p>
+                    <p className="text-lg font-medium">{category.category_name}</p>
+                    <p className="text-sm text-gray-500">
+                      {category.description}
+                    </p>
                   </div>
-                  <p className="text-sm text-gray-500">{vehicle.status}</p>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
-                  <div>
-                    <p className="text-xl font-medium">{vehicle.series}</p>
-                    <p>{vehicle.engine_capacity}</p>
-                  </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateVehicle id={vehicle.id} />
-                    <DeleteVehicle id={vehicle.id} />
+                    <UpdateCategory id={category.id} />
+                    <DeleteCategory id={category.id} />
                   </div>
                 </div>
               </div>
@@ -47,19 +41,10 @@ export default async function VehiclesTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Plate
+                  Name
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Make
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Model
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  MOT
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Status
+                  Description
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -67,30 +52,21 @@ export default async function VehiclesTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {vehicles.map((vehicle: Vehicle) => (
+              {categories?.map((category) => (
                 <tr
-                  key={vehicle.id}
+                  key={category.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <p>{vehicle.plate}</p>
+                    <p>{category.category_name}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.make}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.model}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.mot || 'N/A'}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.status}
+                    {category.description}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateVehicle id={vehicle.id} />
-                      <DeleteVehicle id={vehicle.id} />
+                      <UpdateCategory id={category.id} />
+                      <DeleteCategory id={category.id} />
                     </div>
                   </td>
                 </tr>

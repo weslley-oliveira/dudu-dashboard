@@ -1,10 +1,10 @@
 import { fetchCustomers } from '@/app/lib/data';
 import Form from '@/app/ui/motos/create-form';
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
+import Breadcrumbs from '@/app/ui/motos/breadcrumbs';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Create Invoice',
+  title: 'Create Vehicle',
 };
 
 export default async function Page() {

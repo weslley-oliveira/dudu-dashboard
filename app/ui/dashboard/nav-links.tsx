@@ -4,9 +4,10 @@ import {
   UserGroupIcon,
   HomeIcon,
   FunnelIcon,
-  PlusCircleIcon,
 } from '@heroicons/react/24/outline';
 import { FaMotorcycle } from "react-icons/fa";
+import { MdOutlineProductionQuantityLimits } from "react-icons/md"; // Exemplo de ícone para produtos
+import { PlusCircleIcon } from '@heroicons/react/24/outline'; // Ícone para categorias
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
@@ -26,6 +27,8 @@ const links = [
     icon: FaMotorcycle,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: FunnelIcon },
+  { name: 'Products', href: '/dashboard/products', icon: MdOutlineProductionQuantityLimits }, // Novo item de navegação para Produtos
+  { name: 'Categories', href: '/dashboard/categories', icon: PlusCircleIcon }, // Novo item de navegação para Categorias
 ];
 
 export default function NavLinks() {
