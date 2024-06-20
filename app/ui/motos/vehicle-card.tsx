@@ -16,11 +16,11 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
   };
 
   return (
-    <div className="py-4">
-      <div className="flex justify-between items-center">
-        <div className='flex gap-2 items-center'>
+    <div className="py-4 md:flex md:justify-center">
+      <div className="md:flex justify-between items-center md:justify-center">
+        <div className='md:flex gap-2 items-center'>
           <UkLicensePlate plateNumber={`${vehicle.plate}`} />
-          <div>
+          <div className='p-2'>
             <p className="text-sm text-gray-600 flex items-center gap-1">
               <div className="bg-gray-200 p-1 rounded-lg">
               {vehicle.type === 'Car' ? <FaCarSide size={24} color={vehicle.color}/> : <FaMotorcycle size={24} />}
