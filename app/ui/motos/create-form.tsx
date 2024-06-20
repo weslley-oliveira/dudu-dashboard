@@ -1,9 +1,9 @@
 'use client';
 
-import { CustomerField, Vehicle } from '@/app/lib/definitions';
+import { CustomerField, Vehicle } from '@/app/lib/vehicles/definitions';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { createVehicle } from '@/app/lib/actions';
+import { createVehicle } from '@/app/lib/vehicles/actions';
 import { useFormState } from 'react-dom';
 import { useState } from 'react';
 import { fetchVehicleData } from '@/app/lib/data';
@@ -234,20 +234,13 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 id="tracker_observation"
                 name="tracker_observation"
                 type="text"
-                value={trackerObservation}
+                defaultValue={trackerObservation}
                 onChange={(e) => setTrackerObservation(e.target.value)}
                 placeholder="Enter Tracker Observation"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="tracker_observation-error"
               />
-              <div id="tracker_observation-error" aria-live="polite" aria-atomic="true">
-                {state.errors?.tracker_observation &&
-                  state.errors.tracker_observation.map((error: string) => (
-                    <p className="mt-2 text-sm text-red-500" key={error}>
-                      {error}
-                    </p>
-                  ))}
-              </div>
+        
             </div>
           )}
 

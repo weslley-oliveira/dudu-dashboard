@@ -1,6 +1,7 @@
 import Form from '@/app/ui/motos/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchCustomers, fetchVehicleById } from '@/app/lib/data';
+import { fetchVehicleById } from '@/app/lib/vehicles/data';
+import { fetchCustomers } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
