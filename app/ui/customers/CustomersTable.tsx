@@ -33,7 +33,7 @@ export default async function CustomersTable({
                     <p className="text-xl font-medium">
                       {customer.status}
                     </p>
-                    <p>{customer.description}</p>
+                    <p>{customer.descriptions}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateCustomer id={customer.id} />

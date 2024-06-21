@@ -1,4 +1,3 @@
-import { lusitana } from '@/app/ui/fonts';
 import { FaMotorcycle } from 'react-icons/fa';
 
 export default function AcmeLogo() {

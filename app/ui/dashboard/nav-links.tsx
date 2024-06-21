@@ -3,16 +3,15 @@
 import {
   UserGroupIcon,
   HomeIcon,
-  FunnelIcon,
 } from '@heroicons/react/24/outline';
 import { FaMotorcycle } from "react-icons/fa";
-import { MdOutlineProductionQuantityLimits } from "react-icons/md"; // Exemplo de ícone para produtos
+import { FaCartShopping } from "react-icons/fa6";
+import { IoPeopleSharp } from "react-icons/io5";
 import { PlusCircleIcon } from '@heroicons/react/24/outline'; // Ícone para categorias
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
 
-// Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
 const links = [
   { name: 'Home', href: '/dashboard', icon: HomeIcon },
@@ -26,8 +25,8 @@ const links = [
     href: '/dashboard/motos',
     icon: FaMotorcycle,
   },
-  { name: 'Customers', href: '/dashboard/customers', icon: FunnelIcon },
-  { name: 'Products', href: '/dashboard/products', icon: MdOutlineProductionQuantityLimits }, // Novo item de navegação para Produtos
+  { name: 'Customers', href: '/dashboard/customers', icon: IoPeopleSharp },
+  { name: 'Products', href: '/dashboard/products', icon: FaCartShopping }, // Novo item de navegação para Produtos
   { name: 'Categories', href: '/dashboard/categories', icon: PlusCircleIcon }, // Novo item de navegação para Categorias
 ];
 

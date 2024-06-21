@@ -1,6 +1,6 @@
 import Form from '@/app/ui/users/edit-form';
-import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchCustomers, fetchUserById } from '@/app/lib/data';
+import Breadcrumbs from '@/app/ui/users/breadcrumbs';
+import { fetchUserById } from '@/app/lib/users/data';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 
@@ -10,9 +10,8 @@ export const metadata: Metadata = {
 
 export default async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
-  const [user, customers] = await Promise.all([
+  const [user] = await Promise.all([
     fetchUserById(id),
-    fetchCustomers(),
   ]);
 
   if (!user) {
@@ -31,7 +30,7 @@ export default async function Page({ params }: { params: { id: string } }) {
           },
         ]}
       />
-      <Form user={user} customers={customers} />
+      <Form user={user} />
     </main>
   );
 }

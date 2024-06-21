@@ -14,8 +14,14 @@ export async function fetchFilteredCustomers(query: string, currentPage: number)
         id,
         name,
         email,
+        phone,
+        address,
         status,
-        description
+        vehicle_plate,
+        descriptions,
+        date_of_birth,
+        created_at,
+        updated_at
       FROM customers
       WHERE 
         name ILIKE ${'%' + query + '%'}
@@ -62,8 +68,14 @@ export async function fetchCustomerById(id: string): Promise<Customer | null> {
         id,
         name,
         email,
+        phone,
+        address,
         status,
-        description
+        vehicle_plate,
+        descriptions,
+        date_of_birth,
+        created_at,
+        updated_at
       FROM customers
       WHERE id = ${id};
     `;
