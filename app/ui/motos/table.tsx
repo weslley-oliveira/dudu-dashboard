@@ -1,6 +1,6 @@
 import { UpdateVehicle, DeleteVehicle } from '@/app/ui/motos/buttons';
-import { fetchFilteredVehicles } from '@/app/lib/data';
-import { Vehicle } from '@/app/lib/definitions';
+import { fetchFilteredVehicles } from '@/app/lib/vehicles/data';
+import { Vehicle } from '@/app/lib/vehicles/definitions';
 
 export default async function VehiclesTable({
   query,

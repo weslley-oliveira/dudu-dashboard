@@ -9,21 +9,17 @@ export interface Vehicle {
   type: string;
   year_of_manufacture: number;
   year_registration: string;
-  specs: {
     engine_capacity: string;
     power: string;
     mileage: number;
     transmission: string;
     fuel_type: string;
     color: string;
-  };
   vin: string;
   engine_number: string;
   status: string;
-  price: {
     sale_price: string;
     rental_price: string;
-  };
   document_status: string;
   insurance_status: string;
   maintenance_status: string;

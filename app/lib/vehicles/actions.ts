@@ -34,7 +34,7 @@ const FormSchema = z.object({
   tracker: z.boolean().optional(),
   tracker_observation: z.union([z.string(), z.null()]).optional(),
   observations: z.string().optional(),
-  company_id: z.string().optional(),
+  company_id: z.string().min(1, { message: 'A company is required' }),
   created_at: z.string().optional(),
   updated_at: z.string().optional(),
 });

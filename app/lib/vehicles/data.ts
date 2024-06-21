@@ -46,7 +46,9 @@ export async function fetchFilteredVehicles(query: string, currentPage: number):
         OR model ILIKE ${'%' + query + '%'}
         OR type ILIKE ${'%' + query + '%'}
         OR vin ILIKE ${'%' + query + '%'}
+        OR status ILIKE ${'%' + query + '%'}
         OR engine_number ILIKE ${'%' + query + '%'}
+      ORDER BY created_at DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
@@ -150,21 +152,17 @@ export const fetchVehicleData = async (plate: string): Promise<Vehicle> => {
     type: data.Response.DataItems.VehicleRegistration.VehicleClass || '',
     year_of_manufacture: parseInt(data.Response.DataItems.VehicleRegistration.YearOfManufacture),
     year_registration: data.Response.DataItems.VehicleRegistration.YearOfFirstRegistration,
-    specs: {
       engine_capacity: data.Response.DataItems.VehicleRegistration.EngineCapacity,
       power: '',
       mileage: 0,
       transmission: '',
       fuel_type: data.Response.DataItems.VehicleRegistration.FuelType,
       color: data.Response.DataItems.VehicleRegistration.Colour,
-    },
     vin: data.Response.DataItems.VehicleRegistration.Vin,
     engine_number: data.Response.DataItems.VehicleRegistration.EngineNumber,
     status: '',
-    price: {
       sale_price: '',
       rental_price: '',
-    },
     document_status: '',
     insurance_status: '',
     maintenance_status: '',

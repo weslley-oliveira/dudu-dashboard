@@ -18,13 +18,18 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
   const [tracker, setTracker] = useState(false);
   const [trackerObservation, setTrackerObservation] = useState('');
   const [status, setStatus] = useState('Available');
+  const [documentStatus, setDocumentStatus] = useState('valid');
+  const [insuranceStatus, setInsuranceStatus] = useState('active');
+
+const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  setInsuranceStatus(e.target.value);
+};
 
   const handlePlateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPlate(e.target.value);
   };
 
   const handleFetchData = async () => {
-    
     try {
       const data: Vehicle = await fetchVehicleData(plate);
       setVehicleData(data);
@@ -41,6 +46,10 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setStatus(e.target.value);
+  };
+
+  const handleDocumentStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setDocumentStatus(e.target.value);
   };
 
   return (
@@ -79,17 +88,13 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
           <input type="hidden" name="type" value={vehicleData.type} />
           <input type="hidden" name="year_of_manufacture" value={vehicleData.year_of_manufacture} />
           <input type="hidden" name="year_registration" value={vehicleData.year_registration} />
-          <input type="hidden" name="engine_capacity" value={vehicleData.specs?.engine_capacity || ''} />
-          <input type="hidden" name="power" value={vehicleData.specs?.power || ''} />
-          <input type="hidden" name="transmission" value={vehicleData.specs?.transmission || ''} />
-          <input type="hidden" name="fuel_type" value={vehicleData.specs?.fuel_type || ''} />
-          <input type="hidden" name="color" value={vehicleData.specs?.color || ''} />
+          <input type="hidden" name="engine_capacity" value={vehicleData.engine_capacity || ''} />
+          <input type="hidden" name="power" value={vehicleData.power || ''} />
+          <input type="hidden" name="transmission" value={vehicleData.transmission || ''} />
+          <input type="hidden" name="fuel_type" value={vehicleData.fuel_type || ''} />
+          <input type="hidden" name="color" value={vehicleData.color || ''} />
           <input type="hidden" name="vin" value={vehicleData.vin} />
           <input type="hidden" name="engine_number" value={vehicleData.engine_number} />
-          <input type="hidden" name="sale_price" value={vehicleData.price?.sale_price || ''} />
-          <input type="hidden" name="rental_price" value={vehicleData.price?.rental_price || ''} />
-          <input type="hidden" name="document_status" value={vehicleData.document_status || ''} />
-          <input type="hidden" name="insurance_status" value={vehicleData.insurance_status || ''} />
           <input type="hidden" name="maintenance_status" value={vehicleData.maintenance_status || ''} />
           <input type="hidden" name="tracker_observation" value={vehicleData.tracker_observation || ''} />
 
@@ -100,18 +105,18 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
             label="Mileage"
             type="number"
             placeholder="Enter mileage"
-            value={String(vehicleData.specs?.mileage || 0)}
+            value={String(vehicleData.mileage || 0)}
             error={state.errors?.mileage?.[0]}
           />
 
-          <div className='flex gap-2'>
+          <div className='flex gap-2 w-full'>
             <TextInput
               id="sale_price"
               name="sale_price"
               label="Sale Price"
               type="number"
               placeholder="Enter sale price"
-              value={String(vehicleData.price?.sale_price || '')}
+              value={String(vehicleData.sale_price || '')}
               error={state.errors?.sale_price?.[0]}
             />
 
@@ -121,33 +126,33 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               label="Rental Price"
               type="number"
               placeholder="Enter rental price"
-              value={String(vehicleData.price?.rental_price || '')}
+              value={String(vehicleData.rental_price || '')}
               error={state.errors?.rental_price?.[0]}
             />
           </div>
 
-{/* MOT */}
-<div className="mb-4">
-  <label htmlFor="mot" className="mb-2 block text-sm font-medium">
-    MOT until
-  </label>
-  <input
-    id="mot"
-    name="mot"
-    type="date"
-    defaultValue={vehicleData?.mot}
-    className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-    aria-describedby="mot-error"
-  />
-  <div id="mot-error" aria-live="polite" aria-atomic="true">
-    {state.errors?.mot &&
-      state.errors.mot.map((error: string) => (
-        <p className="mt-2 text-sm text-red-500" key={error}>
-          {error}
-        </p>
-      ))}
-  </div>
-</div>
+          {/* MOT */}
+          <div className="mb-4">
+            <label htmlFor="mot" className="mb-2 block text-sm font-medium">
+              MOT until
+            </label>
+            <input
+              id="mot"
+              name="mot"
+              type="date"
+              defaultValue={vehicleData?.mot || ''}
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              aria-describedby="mot-error"
+            />
+            <div id="mot-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.mot &&
+                state.errors.mot.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
 
           <div className="mb-4">
             <label htmlFor="status" className="mb-2 block text-sm font-medium">
@@ -162,10 +167,10 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
               aria-describedby="status-error"
             >
               <option value="Available">Available</option>
-              <option value="to-rent">To Rent</option>
-              <option value="to-sell">To Sell</option>
-              <option value="to-fix">To Fix</option>
-              <option value="to-storage">To Storage</option>
+              <option value="rented">Rented</option>
+              <option value="sold">Sold</option>
+              <option value="private-storage">Private Storage</option>
+              <option value="claim-storage">Claim Storage</option>
             </select>
             <div id="status-error" aria-live="polite" aria-atomic="true">
               {state.errors?.status &&
@@ -176,6 +181,56 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
                 ))}
             </div>
           </div>
+
+          <div className="mb-4">
+            <label htmlFor="document_status" className="mb-2 block text-sm font-medium">
+              Document Status
+            </label>
+            <select
+              id="document_status"
+              name="document_status"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              value={documentStatus}
+              onChange={handleDocumentStatusChange}
+              aria-describedby="document_status-error"
+            >
+              <option value="valid">Valid</option>
+              <option value="waiting-document">Waiting Document</option>
+            </select>
+            <div id="document_status-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.document_status &&
+                state.errors.document_status.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+
+          <div className="mb-4">
+  <label htmlFor="insurance_status" className="mb-2 block text-sm font-medium">
+    Insurance Status
+  </label>
+  <select
+    id="insurance_status"
+    name="insurance_status"
+    className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+    value={insuranceStatus}
+    onChange={handleInsuranceStatusChange}
+    aria-describedby="insurance_status-error"
+  >
+    <option value="active">Active</option>
+    <option value="expired">Expired</option>
+  </select>
+  <div id="insurance_status-error" aria-live="polite" aria-atomic="true">
+    {state.errors?.insurance_status &&
+      state.errors.insurance_status.map((error: string) => (
+        <p className="mt-2 text-sm text-red-500" key={error}>
+          {error}
+        </p>
+      ))}
+  </div>
+</div>
 
           <div className="mb-4">
             <label htmlFor="company_id" className="mb-2 block text-sm font-medium">

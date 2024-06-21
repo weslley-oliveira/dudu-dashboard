@@ -23,7 +23,7 @@ const TextInput: React.FC<TextInputProps> = ({
   onChange,
 }) => {
   return (
-    <div className="mb-4">
+    <div className="mb-4 w-full">
       <label htmlFor={id} className="mb-2 block text-sm font-medium">
         {label}
       </label>

@@ -12,6 +12,7 @@ interface VehicleCardProps {
 export default function VehicleCard({ vehicle }: VehicleCardProps) {
   const [showDetails, setShowDetails] = useState(false);
 
+  console.log('estou dernto do negocio', vehicle)
   const handleToggleDetails = () => {
     setShowDetails(!showDetails);
   };
@@ -25,13 +26,13 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
             <p className="text-sm text-gray-600 flex items-center gap-1">
               <div className="bg-gray-200 p-1 rounded-lg">
                 {vehicle.type === 'Car' 
-                  ? <FaCarSide size={24} color={vehicle.specs?.color || 'black'} /> 
+                  ? <FaCarSide size={24} color={vehicle.color || 'black'} /> 
                   : <FaMotorcycle size={24} />}
               </div>{vehicle.make}
             </p>
             <p className="text-sm text-gray-600">{vehicle.model}</p>
             <p className="text-sm text-gray-600 flex items-center gap-1">
-              {vehicle.specs?.color || 'Unknown'}
+              {vehicle.color || 'Unknown'}
             </p>
             <p className="text-sm text-gray-600">{vehicle.year_of_manufacture}</p>
           </div>
@@ -50,8 +51,8 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           <p><strong>Series:</strong> {vehicle.series}</p>
           <p><strong>VIN:</strong> {vehicle.vin}</p>
           <p><strong>Engine Number:</strong> {vehicle.engine_number}</p>
-          <p><strong>Engine Capacity:</strong> {vehicle.specs?.engine_capacity || 'Unknown'}</p>
-          <p><strong>Fuel Type:</strong> {vehicle.specs?.fuel_type || 'Unknown'}</p>
+          <p><strong>Engine Capacity:</strong> {vehicle.engine_capacity || 'Unknown'}</p>
+          <p><strong>Fuel Type:</strong> {vehicle.fuel_type || 'Unknown'}</p>
         </div>
       )}
     </div>
