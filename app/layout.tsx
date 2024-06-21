@@ -4,8 +4,8 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | MotoManage - Alenxadre Motorcycles',
-    default: ' MotoManage - Alenxadre Motorcycles',
+    template: '%s | MotoManage - Alexandre Motorcycles',
+    default: ' MotoManage - Alexandre Motorcycles',
   },
   description: 'MotoManage oferece uma solução robusta para gestão de oficinas de motos.',
   metadataBase: new URL('https://alexandremotorcycles.app/'),

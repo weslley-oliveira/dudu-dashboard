@@ -25,6 +25,12 @@ type State = {
     status?: string[];
     company_id?: string[];
     year_of_manufacture?: string[];
+    year_registration?: string[];
+    power?: string[];
+    transmission?: string[];
+    document_status?: string[];
+    insurance_status?: string[];
+    maintenance_status?: string[];
     mot?: string[];
     tracker?: string[];
     tracker_observation?: string[];
@@ -63,12 +69,63 @@ export default function EditVehicleForm({
         <input type="hidden" name="type" value={vehicle.type} />
         <input type="hidden" name="series" value={vehicle.series} />
         <input type="hidden" name="model" value={vehicle.model} />
-        <input type="hidden" name="engine_capacity" value={vehicle.specs?.engine_capacity || ''} />
         <input type="hidden" name="vin" value={vehicle.vin} />
         <input type="hidden" name="engine_number" value={vehicle.engine_number} />
-        <input type="hidden" name="fuel_type" value={vehicle.specs?.fuel_type || ''} />
         <input type="hidden" name="year_of_manufacture" value={vehicle.year_of_manufacture} />
-        <input type="hidden" name="color" value={vehicle.specs?.color || ''} />
+
+        <TextInput
+          id="year_registration"
+          name="year_registration"
+          label="Year Registration"
+          type="text"
+          value={vehicle.year_registration}
+          error={state.errors?.year_registration?.[0]}
+        />
+
+        <TextInput
+          id="engine_capacity"
+          name="engine_capacity"
+          label="Engine Capacity"
+          type="text"
+          value={vehicle.specs?.engine_capacity || ''}
+          error={state.errors?.engine_capacity?.[0]}
+        />
+
+        <TextInput
+          id="power"
+          name="power"
+          label="Power"
+          type="text"
+          value={vehicle.specs?.power || ''}
+          error={state.errors?.power?.[0]}
+        />
+
+        <TextInput
+          id="transmission"
+          name="transmission"
+          label="Transmission"
+          type="text"
+          value={vehicle.specs?.transmission || ''}
+          error={state.errors?.transmission?.[0]}
+        />
+
+        <TextInput
+          id="fuel_type"
+          name="fuel_type"
+          label="Fuel Type"
+          type="text"
+          value={vehicle.specs?.fuel_type || ''}
+          error={state.errors?.fuel_type?.[0]}
+        />
+
+        <TextInput
+          id="color"
+          name="color"
+          label="Color"
+          type="text"
+          value={vehicle.specs?.color || ''}
+          error={state.errors?.color?.[0]}
+        />
 
         <TextInput
           id="mileage"
@@ -83,7 +140,7 @@ export default function EditVehicleForm({
           id="sale_price"
           name="sale_price"
           label="Sale Price"
-          type="number"
+          type="text"
           value={String(vehicle.price?.sale_price || '')}
           error={state.errors?.sale_price?.[0]}
         />
@@ -92,7 +149,7 @@ export default function EditVehicleForm({
           id="rental_price"
           name="rental_price"
           label="Rental Price"
-          type="number"
+          type="text"
           value={String(vehicle.price?.rental_price || '')}
           error={state.errors?.rental_price?.[0]}
         />
@@ -104,6 +161,33 @@ export default function EditVehicleForm({
           type="text"
           value={vehicle.mot}
           error={state.errors?.mot?.[0]}
+        />
+
+        <TextInput
+          id="document_status"
+          name="document_status"
+          label="Document Status"
+          type="text"
+          value={vehicle.document_status}
+          error={state.errors?.document_status?.[0]}
+        />
+
+        <TextInput
+          id="insurance_status"
+          name="insurance_status"
+          label="Insurance Status"
+          type="text"
+          value={vehicle.insurance_status}
+          error={state.errors?.insurance_status?.[0]}
+        />
+
+        <TextInput
+          id="maintenance_status"
+          name="maintenance_status"
+          label="Maintenance Status"
+          type="text"
+          value={vehicle.maintenance_status}
+          error={state.errors?.maintenance_status?.[0]}
         />
 
         <div className="mb-4">

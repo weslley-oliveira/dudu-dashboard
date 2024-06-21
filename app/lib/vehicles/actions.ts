@@ -107,7 +107,6 @@ export async function createVehicle(prevState: State, formData: FormData) {
     observations: formData.get('observations'),
     company_id: formData.get('company_id'),
   });
-
   // If form validation fails, return errors early. Otherwise, continue.
   if (!validatedFields.success) {
     return {
@@ -199,6 +198,7 @@ export async function updateVehicle(id: string, prevState: State, formData: Form
   });
 
   if (!validatedFields.success) {
+    console.log("Erro dodio", validatedFields.error.flatten().fieldErrors,)
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Update Vehicle.',
