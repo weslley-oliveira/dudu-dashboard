@@ -1,4 +1,4 @@
-import { fetchCustomers } from '@/app/lib/data';
+import { fetchCompanies } from '@/app/lib/data';
 import Form from '@/app/ui/motos/create-form';
 import Breadcrumbs from '@/app/ui/motos/breadcrumbs';
 import { Metadata } from 'next';
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const customers = await fetchCustomers();
+  const customers = await fetchCompanies();
 
   return (
     <main>

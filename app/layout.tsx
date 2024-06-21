@@ -4,11 +4,11 @@ import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: {
-    template: '%s | Acme Dashboard',
-    default: 'Acme Dashboard',
+    template: '%s | MotoManage - Alenxadre Motorcycles',
+    default: ' MotoManage - Alenxadre Motorcycles',
   },
-  description: 'The official Next.js Learn Dashboard built with App Router.',
-  metadataBase: new URL('https://next-learn-dashboard.vercel.sh'),
+  description: 'MotoManage oferece uma solução robusta para gestão de oficinas de motos.',
+  metadataBase: new URL('https://alexandremotorcycles.app/'),
 };
 export default function RootLayout({
   children,

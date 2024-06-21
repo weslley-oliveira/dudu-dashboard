@@ -70,3 +70,7 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
 
 
 export const toUpperCase = (value: string | undefined) => value ? value.toUpperCase() : '';
+
+export const formatCurrencyGb = (value: number): string => {
+  return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(value);
+};

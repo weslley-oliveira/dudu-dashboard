@@ -1,5 +1,6 @@
 'use client';
-import { Vehicle } from '@/app/lib/definitions';
+
+import { Vehicle } from '@/app/lib/vehicles/definitions';
 import { useState } from 'react';
 import { FaMotorcycle, FaCarSide } from 'react-icons/fa';
 import UkLicensePlate from '../UkLicensePlate';
@@ -23,14 +24,18 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           <div className='p-2'>
             <p className="text-sm text-gray-600 flex items-center gap-1">
               <div className="bg-gray-200 p-1 rounded-lg">
-              {vehicle.type === 'Car' ? <FaCarSide size={24} color={vehicle.color}/> : <FaMotorcycle size={24} />}
-                </div>{vehicle.make} </p>
+                {vehicle.type === 'Car' 
+                  ? <FaCarSide size={24} color={vehicle.specs?.color || 'black'} /> 
+                  : <FaMotorcycle size={24} />}
+              </div>{vehicle.make}
+            </p>
             <p className="text-sm text-gray-600">{vehicle.model}</p>
-            <p className="text-sm text-gray-600 flex items-center gap-1">{vehicle.color}</p>
+            <p className="text-sm text-gray-600 flex items-center gap-1">
+              {vehicle.specs?.color || 'Unknown'}
+            </p>
             <p className="text-sm text-gray-600">{vehicle.year_of_manufacture}</p>
           </div>
           <div className="ml-2">
-            
           </div>
         </div>
         <button
@@ -45,8 +50,8 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
           <p><strong>Series:</strong> {vehicle.series}</p>
           <p><strong>VIN:</strong> {vehicle.vin}</p>
           <p><strong>Engine Number:</strong> {vehicle.engine_number}</p>
-          <p><strong>Engine Capacity:</strong> {vehicle.engine_capacity}</p>
-          <p><strong>Fuel Type:</strong> {vehicle.fuel_type}</p>
+          <p><strong>Engine Capacity:</strong> {vehicle.specs?.engine_capacity || 'Unknown'}</p>
+          <p><strong>Fuel Type:</strong> {vehicle.specs?.fuel_type || 'Unknown'}</p>
         </div>
       )}
     </div>

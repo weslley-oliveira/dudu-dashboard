@@ -1,25 +1,41 @@
-// lib/categories/definitions.ts
+
+// app/lib/vehicles/definitions.ts
 export interface Vehicle {
   id: string;
   plate: string;
   make: string;
-  type: string;
-  series: string;
-  mileage: number;
-  observations?: string;
   model: string;
-  engine_capacity: string; 
+  series: string;
+  type: string;
+  year_of_manufacture: number;
+  year_registration: string;
+  specs: {
+    engine_capacity: string;
+    power: string;
+    mileage: number;
+    transmission: string;
+    fuel_type: string;
+    color: string;
+  };
   vin: string;
   engine_number: string;
-  fuel_type: string;
   status: string;
-  company_id?: string | null;
-  year_of_manufacture: number;
-  mot?: string;
-  tracker?: boolean;
-  tracker_observation?: string;
-  color: string;
+  price: {
+    sale_price: string;
+    rental_price: string;
+  };
+  document_status: string;
+  insurance_status: string;
+  maintenance_status: string;
+  mot: string;
+  tracker: boolean;
+  tracker_observation: string;
+  observations: string;
+  company_id: string;
+  created_at: string;
+  updated_at: string;
 }
+
 
 export type CustomerField = {
   id: string;
