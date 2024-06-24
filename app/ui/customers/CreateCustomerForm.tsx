@@ -7,7 +7,7 @@ import { Button } from '@/app/ui/button';
 import { createCustomer } from '@/app/lib/customers/actions';
 import { useFormState } from 'react-dom';
 
-export default function Form({ customers }: { customers: CustomerField[] }) {
+export default function Form() {
   const initialState = { message: '', errors: {} };
   const [state, dispatch] = useFormState(createCustomer, initialState);
 

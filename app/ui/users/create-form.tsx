@@ -7,13 +7,11 @@ import {
   PhoneIcon,
   UserGroupIcon,
   LinkIcon,
-  KeyIcon,
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
-import { updateUser } from '@/app/lib/users/actions';
+import { createUser } from '@/app/lib/users/actions'; // Ajuste para sua ação de criação de usuário
 import { useFormState } from 'react-dom';
-import { User } from '@/app/lib/users/definitions';
 
 type State = {
   errors?: {
@@ -28,14 +26,9 @@ type State = {
   message: string;
 };
 
-export default function EditUserForm({
-  user,
-}: {
-  user: User;
-}) {
+export default function CreateUserForm() {
   const initialState: State = { message: '', errors: {} };
-  const updateUserWithId = async (prevState: State, formData: FormData) => updateUser(user.id, prevState, formData);
-  const [state, dispatch] = useFormState(updateUserWithId, initialState);
+  const [state, dispatch] = useFormState(createUser, initialState);
 
   return (
     <form action={dispatch}>
@@ -50,7 +43,6 @@ export default function EditUserForm({
               id="username"
               name="username"
               type="text"
-              defaultValue={user.username}
               placeholder="Enter Username"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="username-error"
@@ -77,7 +69,6 @@ export default function EditUserForm({
               id="full_name"
               name="full_name"
               type="text"
-              defaultValue={user.full_name}
               placeholder="Enter Full Name"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="full_name-error"
@@ -104,7 +95,6 @@ export default function EditUserForm({
               id="email"
               name="email"
               type="email"
-              defaultValue={user.email}
               placeholder="Enter Email"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="email-error"
@@ -130,7 +120,6 @@ export default function EditUserForm({
             <select
               id="user_type"
               name="user_type"
-              defaultValue={user.user_type}
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="user_type-error"
             >
@@ -163,7 +152,6 @@ export default function EditUserForm({
               id="avatar_url"
               name="avatar_url"
               type="url"
-              defaultValue={user.avatar_url}
               placeholder="Enter Avatar URL"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="avatar_url-error"
@@ -190,7 +178,6 @@ export default function EditUserForm({
               id="phone"
               name="phone"
               type="tel"
-              defaultValue={user.phone}
               placeholder="Enter Phone Number"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="phone-error"
@@ -220,7 +207,7 @@ export default function EditUserForm({
         >
           Cancel
         </Link>
-        <Button type="submit">Edit User</Button>
+        <Button type="submit">Create User</Button>
       </div>
     </form>
   );
