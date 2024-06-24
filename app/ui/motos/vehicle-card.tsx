@@ -23,13 +23,13 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
         <div className='md:flex gap-2 items-center'>
           <UkLicensePlate plateNumber={`${vehicle.plate}`} />
           <div className='p-2'>
-            <p className="text-sm text-gray-600 flex items-center gap-1">
+            <div className="text-sm text-gray-600 flex items-center gap-1">
               <div className="bg-gray-200 p-1 rounded-lg">
                 {vehicle.type === 'Car' 
                   ? <FaCarSide size={24} color={vehicle.color || 'black'} /> 
                   : <FaMotorcycle size={24} />}
               </div>{vehicle.make}
-            </p>
+            </div>
             <p className="text-sm text-gray-600">{vehicle.model}</p>
             <p className="text-sm text-gray-600 flex items-center gap-1">
               {vehicle.color || 'Unknown'}
