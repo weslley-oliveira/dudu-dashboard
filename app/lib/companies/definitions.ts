@@ -14,3 +14,10 @@ export interface Company {
   created_at: Date; // Data de criação do registro
   updated_at: Date; // Data da última atualização do registro
 }
+
+
+
+export type CompaniesField = {
+  id: string;
+  name: string;
+};

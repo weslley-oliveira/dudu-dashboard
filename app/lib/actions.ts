@@ -121,7 +121,6 @@ export async function createVehicle(prevState: State, formData: FormData) {
 
   // Se a validação do formulário falhar, retornar erros imediatamente.
   if (!validatedFields.success) {
-    console.log('teste', validatedFields.error.flatten().fieldErrors);
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Create Vehicle.',

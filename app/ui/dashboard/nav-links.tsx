@@ -26,7 +26,7 @@ const links = [
     icon: FaMotorcycle,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: IoPeopleSharp },
-  { name: 'Products', href: '/dashboard/products', icon: FaCartShopping },
+  { name: 'Parts', href: '/dashboard/parts', icon: FaCartShopping },
   { name: 'Categories', href: '/dashboard/categories', icon: PlusCircleIcon },
   { name: 'Companies', href: '/dashboard/companies', icon: FaBuilding }, // Novo item de navegação para Companies
 ];

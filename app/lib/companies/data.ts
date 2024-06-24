@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { Company } from './definitions';
+import { Company, CompaniesField } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const ITEMS_PER_PAGE = 6;
@@ -100,3 +100,22 @@ export async function fetchCompanyById(id: string): Promise<Company | null> {
     return null;
   }
 } 
+
+export async function fetchCompanies() {
+  noStore();
+  try {
+    const data = await sql<CompaniesField>`
+      SELECT
+        id,
+        name
+      FROM companies
+      ORDER BY name ASC
+    `;
+
+    const customers = data.rows;
+    return customers;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch all customers.');
+  }
+}
