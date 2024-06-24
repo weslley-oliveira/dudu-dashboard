@@ -84,26 +84,26 @@ export default function UploadForm({ onFileUpload }: UploadFormProps) {
         >
           <PhotoIcon className="w-5 mr-2" />
           Upload Picture
-        </button>  
+        </button>
       </div>
       {uploading && <p>Uploading...</p>}
       {uploadedFileUrl && (
-        <div className="relative flex items-start justify-center mt-4">
-        <Image
-          src={uploadedFileUrl}
-          className="mr-2"
-          width={280}
-          height={280}
-          alt="Uploaded file"
-        />
-        <button
-          onClick={handleRemoveClick}
-          className="bg-white rounded-md border p-2 hover:bg-gray-100"
-          aria-label="Remove image"
-        >
-          <TrashIcon className="w-5" />
-        </button>
-      </div>
+        <div className="flex  items-center md:items-start justify-center mt-4 flex-col gap-2">
+          <Image
+            src={uploadedFileUrl}
+            className=""
+            width={280}
+            height={280}
+            alt="Uploaded file"
+          />
+          <button
+            onClick={handleRemoveClick}
+            className="bg-white rounded-md border p-2 hover:bg-gray-100 text-center flex items-center mb-2"
+            aria-label="Remove image"
+          >
+            <TrashIcon className="w-5 text-center" />
+          </button>
+        </div>
       )}
     </div>
   );
