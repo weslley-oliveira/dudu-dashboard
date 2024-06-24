@@ -35,7 +35,7 @@ export default function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <>
+    <nav className="flex flex-wrap justify-between gap-1 md:flex-col md:justify-start">
       {links.map((link) => {
         const LinkIcon = link.icon;
         return (
@@ -54,6 +54,6 @@ export default function NavLinks() {
           </Link>
         );
       })}
-    </>
+    </nav>
   );
 }

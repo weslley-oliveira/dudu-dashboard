@@ -162,7 +162,7 @@ export default function Form({ companies }: FormProps) {
           {/* Unit of Measurement */}
           <div className="mb-4 w-full">
             <label htmlFor="unitOfMeasurement" className="mb-2 block text-sm font-medium">
-              Unit of Measurement
+              UOM
             </label>
             <select
               id="unitOfMeasurement"
@@ -172,7 +172,7 @@ export default function Form({ companies }: FormProps) {
               required
               aria-describedby="unitOfMeasurement-error"
             >
-              <option value="" disabled>
+              <option value="unit" disabled>
                 Select a unit
               </option>
               <option value="unit">Unit</option>

@@ -1,6 +1,6 @@
 'use client';
 
-import { TrashIcon } from '@heroicons/react/24/outline';
+import { PhotoIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
 
@@ -9,16 +9,12 @@ interface UploadFormProps {
 }
 
 export default function UploadForm({ onFileUpload }: UploadFormProps) {
-  const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadedFileUrl, setUploadedFileUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFile(e.target.files?.[0] || null);
-  };
-
-  const handleUploadClick = async () => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
     if (!file) return;
 
     setUploading(true);
@@ -31,7 +27,7 @@ export default function UploadForm({ onFileUpload }: UploadFormProps) {
         body: formData,
       });
 
-      if (response.ok) { 
+      if (response.ok) {
         const result = await response.json();
         setUploadedFileUrl(result.fileUrl);
         onFileUpload(result.fileUrl); // Chama a função de callback com a URL
@@ -59,7 +55,6 @@ export default function UploadForm({ onFileUpload }: UploadFormProps) {
 
       if (response.ok) {
         setUploadedFileUrl(null);
-        setFile(null);
         onFileUpload(''); // Atualiza a URL no componente pai para vazio
 
         // Resetar o valor do input de arquivo para permitir nova seleção
@@ -76,16 +71,22 @@ export default function UploadForm({ onFileUpload }: UploadFormProps) {
 
   return (
     <div>
-      <div className='flex items-center'>
-        <input type="file" onChange={handleFileChange} ref={fileInputRef} />
+      <div className='flex items-center w-full gap-2'>
+        <input
+          type="file"
+          onChange={handleFileChange}
+          ref={fileInputRef}
+          style={{ display: 'none' }}
+        />
         <button
-          onClick={handleUploadClick}
-          disabled={!file || uploading}
-          className='flex h-10 items-center rounded-lg bg-blue-500 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-500 active:bg-blue-600 aria-disabled:cursor-not-allowed aria-disabled:opacity-50'
+          onClick={() => fileInputRef.current?.click()}
+          className="bg-white rounded-md border p-2 hover:bg-gray-100 flex items-center justify-center w-full "
         >
-          {uploading ? 'Enviando...' : 'Enviar'}
-        </button>
+          <PhotoIcon className="w-5 mr-2" />
+          Upload Picture
+        </button>  
       </div>
+      {uploading && <p>Uploading...</p>}
       {uploadedFileUrl && (
         <div className="relative flex items-start justify-center mt-4">
         <Image

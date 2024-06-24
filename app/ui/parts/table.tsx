@@ -45,7 +45,7 @@ export default async function PartsTable({
                     <p>Quantity: {part.quantity}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdatePart id={part.id} />
+                    {/* <UpdatePart id={part.id} /> */}
                     <DeletePart id={part.id} />
                   </div>
                 </div>
