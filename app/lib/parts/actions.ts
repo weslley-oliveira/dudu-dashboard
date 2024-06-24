@@ -174,13 +174,3 @@ export async function deletePart(id: string) {
     return { message: 'Database Error: Failed to Delete Part.' };
   }
 }
-
-// export async function deletePart(id: string) {
-//   try {
-//     await sql`DELETE FROM parts WHERE id = ${id}`;
-//     revalidatePath('/dashboard/parts');
-//     return { message: 'Deleted Part' };
-//   } catch (error) {
-//     return { message: 'Database Error: Failed to Delete Part.' };
-//   }
-// }
