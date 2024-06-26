@@ -30,13 +30,6 @@ const config: Config = {
   },
   plugins: [
     require('@tailwindcss/forms'),
-    function({ addBase }: PluginAPI) {
-      addBase({
-        'input, textarea, select': {
-          fontSize: '16px',
-        },
-      });
-    },
   ],
 };
 
