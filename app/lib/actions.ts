@@ -27,26 +27,6 @@ const FormSchema = z.object({
 const CreateInvoice = FormSchema.omit({ id: true, date: true });
 const UpdateInvoice = FormSchema.omit({ date: true, id: true });
 
-const CreateVehicle = z.object({
-  plate: z.string().min(1, { message: 'Plate is required' }),
-  make: z.string().min(1, { message: 'Make is required' }),
-  type: z.string().min(1, { message: 'Type is required' }),
-  series: z.string().min(1, { message: 'Series is required' }),
-  mileage: z.number().nonnegative({ message: 'Mileage must be a non-negative number' }),
-  observations: z.string().optional(),
-  model: z.string().min(1, { message: 'Model is required' }),
-  engine_capacity: z.string().min(1, { message: 'Engine Capacity is required' }),
-  vin: z.string().min(1, { message: 'VIN is required' }),
-  engine_number: z.string().min(1, { message: 'Engine Number is required' }),
-  fuel_type: z.string().min(1, { message: 'Fuel Type is required' }),
-  status: z.string().min(1, { message: 'Status is required' }),
-  company_id: z.string().optional(),
-  year_of_manufacture: z.number().int().nonnegative({ message: 'Year of Manufacture must be a non-negative integer' }),
-  mot: z.string().optional(),
-  tracker: z.boolean().optional(),
-  tracker_observation: z.string().optional(),
-  color: z.string().min(1, { message: 'Color is required' })
-});
 // This is temporary
 export type State = {
   errors?: {
@@ -94,81 +74,6 @@ export async function createInvoice(prevState: State, formData: FormData) {
   // Revalidate the cache for the invoices page and redirect the user.
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
-}
-
-export async function createVehicle(prevState: State, formData: FormData) {
-  // Validar os campos do formulário usando Zod
-  const validatedFields = CreateVehicle.safeParse({
-    plate: formData.get('plate'),
-    make: formData.get('make'),
-    type: formData.get('type'),
-    series: formData.get('series'),
-    mileage: Number(formData.get('mileage')),
-    observations: formData.get('observations'),
-    model: formData.get('model'),
-    engine_capacity: formData.get('engine_capacity'),
-    vin: formData.get('vin'),
-    engine_number: formData.get('engine_number'),
-    fuel_type: formData.get('fuel_type'),
-    status: formData.get('status'),
-    company_id: formData.get('company_id'),
-    year_of_manufacture: Number(formData.get('year_of_manufacture')),
-    mot: formData.get('mot'),
-    tracker: formData.get('tracker') === 'on',
-    tracker_observation: formData.get('tracker_observation'),
-    color: formData.get('color')
-  });
-
-  // Se a validação do formulário falhar, retornar erros imediatamente.
-  if (!validatedFields.success) {
-    return {
-      errors: validatedFields.error.flatten().fieldErrors,
-      message: 'Missing Fields. Failed to Create Vehicle.',
-    };
-  }
-
-  // Preparar os dados para inserção no banco de dados
-  const {
-    plate,
-    make,
-    type,
-    series,
-    mileage,
-    observations,
-    model,
-    engine_capacity,
-    vin,
-    engine_number,
-    fuel_type,
-    status,
-    company_id,
-    year_of_manufacture,
-    mot,
-    tracker,
-    tracker_observation,
-    color
-  } = validatedFields.data;
-
-  // Inserir os dados no banco de dados
-  try {
-    await sql`
-      INSERT INTO vehicles (
-        plate, make, type, series, mileage, observations, model, engine_capacity, vin, engine_number, fuel_type, status, company_id, year_of_manufacture, mot, tracker, tracker_observation, color
-      ) VALUES (
-        ${toUpperCase(plate)}, ${make}, ${type}, ${series}, ${mileage}, ${observations}, ${model}, ${engine_capacity}, ${vin}, ${engine_number}, ${fuel_type}, ${status}, ${company_id}, ${year_of_manufacture}, ${mot}, ${tracker}, ${tracker_observation}, ${color}
-      )
-    `;
-  } catch (error) {
-    // Se ocorrer um erro no banco de dados, retornar um erro mais específico.
-    console.error('Database Error:', error);
-    return {
-      message: 'Database Error: Failed to Create Vehicle.',
-    };
-  }
-
-  // Revalidar o cache para a página de veículos e redirecionar o usuário.
-  revalidatePath('/dashboard/motos');
-  redirect('/dashboard/motos');
 }
 
 

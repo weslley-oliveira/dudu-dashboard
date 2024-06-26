@@ -16,19 +16,15 @@ export async function fetchFilteredUsers(query: string, currentPage: number) {
     const users = await sql<User>`
       SELECT
         users.id,
-        users.username,
         users.password_hash,
         users.email,
         users.full_name,
-        users.user_type,
         users.avatar_url,
         users.phone
       FROM users
       WHERE
-        users.username ILIKE ${searchQuery} OR
         users.email ILIKE ${searchQuery} OR
         users.full_name ILIKE ${searchQuery} OR
-        users.user_type ILIKE ${searchQuery} OR
         users.phone ILIKE ${searchQuery}
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset};
     `;
@@ -70,11 +66,9 @@ export async function fetchUserById(id: string) {
     const data = await sql<User>`
       SELECT
         users.id,
-        users.username,
         users.password_hash,
         users.email,
         users.full_name,
-        users.user_type,
         users.avatar_url,
         users.phone
       FROM users

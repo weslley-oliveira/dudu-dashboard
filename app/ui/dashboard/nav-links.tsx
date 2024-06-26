@@ -8,6 +8,7 @@ import {
 import { FaMotorcycle, FaBuilding } from "react-icons/fa";
 import { FaCartShopping } from "react-icons/fa6";
 import { IoPeopleSharp } from "react-icons/io5";
+import { GrUserWorker } from "react-icons/gr";
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
@@ -27,6 +28,7 @@ const links = [
   },
   { name: 'Customers', href: '/dashboard/customers', icon: IoPeopleSharp },
   { name: 'Parts', href: '/dashboard/parts', icon: FaCartShopping },
+  { name: 'Employees', href: '/dashboard/employees', icon: GrUserWorker },
   { name: 'Categories', href: '/dashboard/categories', icon: PlusCircleIcon },
   { name: 'Companies', href: '/dashboard/companies', icon: FaBuilding }, // Novo item de navegação para Companies
 ];

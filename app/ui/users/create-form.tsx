@@ -16,7 +16,7 @@ import { useFormState } from 'react-dom';
 type State = {
   errors?: {
     username?: string[];
-    full_name?: string[];
+    full_name?: string[]; 
     email?: string[];
     password?: string[];
     user_type?: string[];

@@ -27,7 +27,7 @@ export type State = {
     username?: string[];
     password?: string[];
     email?: string[];
-    full_name?: string[];
+    full_name?: string[]; 
     user_type?: string[];
     avatar_url?: string[];
     phone?: string[];
