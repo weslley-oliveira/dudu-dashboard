@@ -2,6 +2,15 @@ import '@/app/ui/global.css';
 import { inter } from '@/app/ui/fonts';
 import { Metadata } from 'next';
 import PreventZoom from './ui/PreventZoom';
+import type { Viewport } from 'next'
+ 
+export const viewport: Viewport = {
+  themeColor: 'black',
+  width: 'device-width',
+  initialScale :1, 
+  maximumScale:1, 
+  userScalable:false,
+}
 
 export const metadata: Metadata = {
   title: {
@@ -10,7 +19,6 @@ export const metadata: Metadata = {
   },
   description: 'MotoManage oferece uma solução robusta para gestão de oficinas de motos.',
   metadataBase: new URL('https://alexandremotorcycles.app/'),
-  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no'
 };
 export default function RootLayout({
   children,
@@ -19,9 +27,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-      </head>
       <body className={`${inter.className} antialiased`}>
       <PreventZoom>
           {children}
