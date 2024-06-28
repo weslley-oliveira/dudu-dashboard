@@ -1,6 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { CategoryField, Product } from '../products/definitions';
 import { unstable_noStore as noStore } from 'next/cache';
+import { Part } from '../parts/definitions';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -109,5 +110,30 @@ export async function fetchCategories() {
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch categories.');
+  }
+}
+
+export async function fetchProducts(): Promise<Product[]> {
+  noStore();
+
+  try {
+    const data = await sql<Product>`
+      SELECT
+        id,
+        product_name,
+        product_code,
+        category,
+        manufacturer,
+        price,
+        stock,
+        status,
+        observations
+      FROM products
+    `;
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch products.');
   }
 }

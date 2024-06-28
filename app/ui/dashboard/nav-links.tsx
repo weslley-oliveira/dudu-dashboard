@@ -30,8 +30,9 @@ const links = [
   { name: 'Customers', href: '/dashboard/customers', icon: IoPeopleSharp },
   { name: 'Parts', href: '/dashboard/parts', icon: FaCartShopping },
   { name: 'Employees', href: '/dashboard/employees', icon: GrUserWorker },
-  { name: 'Categories', href: '/dashboard/categories', icon: PlusCircleIcon },
+  // { name: 'Categories', href: '/dashboard/categories', icon: PlusCircleIcon },
   { name: 'Suppliers', href: '/dashboard/suppliers', icon: FaTruck },
+  { name: 'Item Requests', href: '/dashboard/item-requests', icon: PlusCircleIcon },
 ];
 
 export default function NavLinks() {

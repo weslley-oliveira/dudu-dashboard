@@ -14,6 +14,7 @@ export default function UploadForm({ onFileUpload }: UploadFormProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
     const file = e.target.files?.[0] || null;
     if (!file) return;
 
@@ -69,6 +70,11 @@ export default function UploadForm({ onFileUpload }: UploadFormProps) {
     }
   };
 
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
+    fileInputRef.current?.click();
+  };
+
   return (
     <div>
       <div className='flex items-center w-full gap-2'>
@@ -79,7 +85,7 @@ export default function UploadForm({ onFileUpload }: UploadFormProps) {
           style={{ display: 'none' }}
         />
         <button
-          onClick={() => fileInputRef.current?.click()}
+          onClick={handleClick}
           className="bg-white rounded-md border p-2 hover:bg-gray-100 flex items-center justify-center w-full "
         >
           <PhotoIcon className="w-5 mr-2" />

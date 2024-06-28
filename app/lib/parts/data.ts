@@ -21,7 +21,6 @@ export async function fetchFilteredParts(query: string, currentPage: number): Pr
         quantity,
         company_id AS "companyId",
         product_url AS "productUrl",
-        image_urls AS "imageUrls"
       FROM parts
       WHERE 
         description ILIKE ${'%' + query + '%'}
@@ -86,5 +85,26 @@ export async function fetchPartById(id: string): Promise<Part | null> {
   } catch (error) {
     console.error('Database Error:', error);
     return null;
+  }
+}
+
+
+export async function fetchParts(): Promise<Part[]> {
+  noStore();
+
+  try {
+    const data = await sql<Part>`
+      SELECT
+        id,
+        description,
+        brand,
+        product_url
+      FROM parts
+    `;
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch parts.');
   }
 }

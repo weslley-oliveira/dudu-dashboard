@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { QueryResult, sql } from '@vercel/postgres';
-import { S3Client, DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { s3Client } from '../s3-config';
@@ -12,14 +12,14 @@ import { Part } from './definitions';
 const PartSchema = z.object({
   id: z.string(),
   description: z.string().min(1, { message: 'Description is required.' }),
-  oemNumber: z.string().min(1, { message: 'OEM number is required.' }),
-  partNumber: z.string().min(1, { message: 'Part number is required.' }),
-  brand: z.string().min(1, { message: 'Brand is required.' }),
+  oemNumber: z.string(),
+  partNumber: z.string(),
+  brand: z.string(),
   unitOfMeasurement: z.string().min(1, { message: 'Unit of measurement is required.' }),
   unitPrice: z.number().min(0, { message: 'Unit price must be non-negative.' }),
   quantity: z.number().min(0, { message: 'Quantity must be non-negative.' }),
-  companyId: z.string(),
-  productUrl: z.string().url({ message: 'Invalid product URL.' }),
+  companyId: z.string().min(1, { message: 'Company is required' }),
+  productUrl: z.string(),
 });
 
 const CreatePart = PartSchema.omit({ id: true });
