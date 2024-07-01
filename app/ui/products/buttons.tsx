@@ -5,7 +5,7 @@ import { deleteProduct } from '@/app/lib/products/actions';
 export function CreateProduct() {
   return (
     <Link
-      href="/dashboard/products/create"
+      href="/dashboard/inventory/products/create"
       className="flex h-10 items-center rounded-lg bg-green-600 px-4 text-sm font-medium text-white transition-colors hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
     >
       <span className="hidden md:block">Create Product</span>{' '}
@@ -17,7 +17,7 @@ export function CreateProduct() {
 export function UpdateProduct({ id }: { id: string }) {
   return (
     <Link
-      href={`/dashboard/products/${id}/edit`}
+      href={`/dashboard/inventory/products/${id}/edit`}
       className="rounded-md border p-2 hover:bg-gray-100"
     >
       <PencilIcon className="w-5" />

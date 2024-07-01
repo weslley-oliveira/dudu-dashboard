@@ -17,7 +17,7 @@ export default async function Page() {
           { label: 'Products', href: '/dashboard/products' },
           {
             label: 'Create Product',
-            href: '/dashboard/products/create',
+            href: '/dashboard/inventory/products/create',
             active: true,
           },
         ]}
