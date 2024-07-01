@@ -127,27 +127,26 @@ export default function PartsTable() {
                     </div>
                   </div>
                   <div className="flex items-center bg-gray-100 rounded-full text-xs text-gray-500 px-4 py-1">
-                    <p className="mr-2">{part.quantity}{'x'}</p>
-                    <FaBox />
-                  </div>
+                      <p className="mr-2">{part.quantity}{'x'}</p>
+                      <FaBox />
+                    </div>
+                  
                 </div>
                 <div className="mt-2">
-                  <div className='flex gap-2 justify-between'>
-                    <QuantityCounter
-                      onChange={(requestedQuantity) => handleQuantityChange(part.id, requestedQuantity)}
-                    />
-                    <button
-                      className={`rounded-md border p-2 ${
-                        requestedQuantities[part.id] > 0 ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                      }`}
-                      onClick={() => handleAddPart(part)}
-                      disabled={requestedQuantities[part.id] === 0 || !requestedQuantities[part.id]}
-                    >
-                      <span className="sr-only">add</span>
-                      <PlusCircleIcon className="w-5" />
-                    </button>
+                    <div className='flex gap-2 justify-between'>
+                      <QuantityCounter
+                        onChange={(requestedQuantity) => handleQuantityChange(part.id, requestedQuantity)}
+                      />
+                      <button
+                        className="rounded-md border p-2 hover:bg-blue-100 bg-blue-400 text-white"
+                        onClick={() => handleAddPart(part)}
+                        disabled={requestedQuantities[part.id] === 0 || !requestedQuantities[part.id]}
+                      >
+                        <span className="sr-only">add</span>
+                        <PlusCircleIcon className="w-5" />
+                      </button>
+                    </div>
                   </div>
-                </div>
               </div>
             ))}
           </div>
@@ -172,13 +171,12 @@ export default function PartsTable() {
                   </div>
                 </div>
                 <div className='flex items-center gap-2'>
+
                   <QuantityCounter
                     onChange={(requestedQuantity) => handleQuantityChange(part.id, requestedQuantity)}
                   />
                   <button
-                    className={`rounded-md border p-2 ${
-                      requestedQuantities[part.id] > 0 ? 'bg-blue-500 text-white hover:bg-blue-600' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                    }`}
+                    className="rounded-md border p-2 hover:bg-blue-100 bg-blue-400 text-white"
                     onClick={() => handleAddPart(part)}
                     disabled={requestedQuantities[part.id] === 0 || !requestedQuantities[part.id]}
                   >
@@ -215,7 +213,7 @@ export default function PartsTable() {
                   <FaBox />
                 </div>
               </div>
-              <button className="rounded-md border p-2 bg-red-500 text-white hover:bg-red-600" onClick={() => handleRemovePart(selectedPart.id)}>
+              <button className="rounded-md border p-2 hover:bg-gray-100" onClick={() => handleRemovePart(selectedPart.id)}>
                 <span className="sr-only">Delete</span>
                 <TrashIcon className="w-5" />
               </button>

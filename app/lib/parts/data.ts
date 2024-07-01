@@ -20,7 +20,7 @@ export async function fetchFilteredParts(query: string, currentPage: number): Pr
         unit_price AS "unitPrice",
         quantity,
         company_id AS "companyId",
-        product_url AS "productUrl",
+        product_url AS "productUrl"
       FROM parts
       WHERE 
         description ILIKE ${'%' + query + '%'}
