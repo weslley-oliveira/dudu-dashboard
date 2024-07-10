@@ -3,6 +3,7 @@
 import { PhotoIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useRef, useState } from 'react';
+import { CardSkeleton } from '../skeletons';
 
 interface UploadFormProps {
   onFileUpload: (url: string) => void;
@@ -92,7 +93,7 @@ export default function UploadForm({ onFileUpload }: UploadFormProps) {
           Upload Picture
         </button>
       </div>
-      {uploading && <p>Uploading...</p>}
+      {uploading && <CardSkeleton/>}
       {uploadedFileUrl && (
         <div className="flex  items-center md:items-start justify-center mt-4 flex-col gap-2">
           <Image

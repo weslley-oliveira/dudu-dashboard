@@ -224,7 +224,7 @@ export default function Form({ companies }: { companies: CompaniesField[] }) {
         {/* Company */}
         <div className="mb-4">
           <label htmlFor="companyId" className="mb-2 block text-sm font-medium">
-            Company
+          {`Company${`'`}s Unit`}
           </label>
           <div className="relative">
             <select
