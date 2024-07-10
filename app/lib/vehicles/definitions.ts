@@ -32,8 +32,9 @@ export interface Vehicle {
   updated_at: string;
 }
 
-
-export type CustomerField = {
+export type VehicleField = {
   id: string;
-  name: string;
+  make: string;
+  model: string;
+  plate: string;
 };

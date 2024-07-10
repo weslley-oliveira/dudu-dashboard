@@ -1,6 +1,6 @@
 import { sql } from '@vercel/postgres';
 import { unstable_noStore as noStore } from 'next/cache';
-import { Vehicle } from '../vehicles/definitions';
+import { Vehicle } from './definitions';
 
 const ITEMS_PER_PAGE = 6;
 
@@ -135,6 +135,51 @@ export async function fetchVehicleById(id: string): Promise<Vehicle | null> {
   }
 }
 
+export async function fetchVehicles(): Promise<Vehicle[]> {
+  noStore();
+  try {
+    const data = await sql<Vehicle>`
+      SELECT
+        id,
+        plate,
+        make,
+        type,
+        series,
+        mileage,
+        observations,
+        model,
+        engine_capacity,
+        power,
+        transmission,
+        vin,
+        engine_number,
+        fuel_type,
+        status,
+        company_id,
+        year_of_manufacture,
+        year_registration,
+        mot,
+        tracker,
+        tracker_observation,
+        sale_price,
+        rental_price,
+        document_status,
+        insurance_status,
+        maintenance_status,
+        color,
+        created_at,
+        updated_at
+      FROM vehicles
+      ORDER BY created_at DESC
+    `;
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch vehicles.');
+  }
+}
+
 export const fetchVehicleData = async (plate: string): Promise<Vehicle> => {
   const apiKey = '06a0f54d-44ea-404b-8978-7f519f4f4534';
   const url = `https://uk1.ukvehicledata.co.uk/api/datapackage/VehicleAndMotHistory?v=2&api_nullitems=1&auth_apikey=${apiKey}&key_VRM=${plate}`;
@@ -152,17 +197,17 @@ export const fetchVehicleData = async (plate: string): Promise<Vehicle> => {
     type: data.Response.DataItems.VehicleRegistration.VehicleClass || '',
     year_of_manufacture: parseInt(data.Response.DataItems.VehicleRegistration.YearOfManufacture),
     year_registration: data.Response.DataItems.VehicleRegistration.YearOfFirstRegistration,
-      engine_capacity: data.Response.DataItems.VehicleRegistration.EngineCapacity,
-      power: '',
-      mileage: 0,
-      transmission: '',
-      fuel_type: data.Response.DataItems.VehicleRegistration.FuelType,
-      color: data.Response.DataItems.VehicleRegistration.Colour,
+    engine_capacity: data.Response.DataItems.VehicleRegistration.EngineCapacity,
+    power: '',
+    mileage: 0,
+    transmission: '',
+    fuel_type: data.Response.DataItems.VehicleRegistration.FuelType,
+    color: data.Response.DataItems.VehicleRegistration.Colour,
     vin: data.Response.DataItems.VehicleRegistration.Vin,
     engine_number: data.Response.DataItems.VehicleRegistration.EngineNumber,
     status: '',
-      sale_price: '',
-      rental_price: '',
+    sale_price: '',
+    rental_price: '',
     document_status: '',
     insurance_status: '',
     maintenance_status: '',

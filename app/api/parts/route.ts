@@ -22,8 +22,7 @@ export async function GET(request: NextRequest) {
         unit_price AS "unitPrice",
         quantity,
         company_id AS "companyId",
-        product_url AS "productUrl",
-        image_urls AS "imageUrls"
+        product_url AS "productUrl"
       FROM parts
       WHERE 
         description ILIKE ${'%' + query + '%'}

@@ -12,3 +12,8 @@ export type Customer = {
   updated_at: string;
 };
 
+
+export type CustomerField = {
+  id: string;
+  name: string;
+};

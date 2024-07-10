@@ -90,3 +90,31 @@ export async function fetchCustomerById(id: string): Promise<Customer | null> {
     return null;
   }
 }
+
+// Nova função fetchCustomers para buscar todos os clientes
+export async function fetchCustomers(): Promise<Customer[]> {
+  noStore();
+  try {
+    const data = await sql<Customer>`
+      SELECT
+        id,
+        name,
+        email,
+        phone,
+        address,
+        status,
+        vehicle_plate,
+        descriptions,
+        date_of_birth,
+        created_at,
+        updated_at
+      FROM customers
+      ORDER BY name ASC
+    `;
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch customers.');
+  }
+}
