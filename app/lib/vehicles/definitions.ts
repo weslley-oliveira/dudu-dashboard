@@ -2,7 +2,7 @@
 // app/lib/vehicles/definitions.ts
 export interface Vehicle {
   id: string;
-  plate: string;
+  registration: string;
   make: string;
   model: string;
   series: string;

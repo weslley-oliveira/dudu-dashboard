@@ -21,7 +21,7 @@ export default function VehicleCard({ vehicle }: VehicleCardProps) {
     <div className="py-4 md:flex md:justify-center">
       <div className="md:flex justify-between items-center md:justify-center">
         <div className='md:flex gap-2 items-center'>
-          <UkLicensePlate plateNumber={`${vehicle.plate}`} />
+          <UkLicensePlate plateNumber={`${vehicle.registration}`} />
           <div className='p-2'>
             <div className="text-sm text-gray-600 flex items-center gap-1">
               <div className="bg-gray-200 p-1 rounded-lg">
