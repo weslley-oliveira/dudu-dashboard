@@ -180,43 +180,10 @@ export async function fetchVehicles(): Promise<Vehicle[]> {
   }
 }
 
-export const fetchVehicleData = async (plate: string): Promise<Vehicle> => {
-  const apiKey = '06a0f54d-44ea-404b-8978-7f519f4f4534';
-  const url = `https://uk1.ukvehicledata.co.uk/api/datapackage/VehicleAndMotHistory?v=2&api_nullitems=1&auth_apikey=${apiKey}&key_VRM=${plate}`;
-  const response = await fetch(url);
-  const data = await response.json();
-
-  console.log(response, "Ta aqui de verdade");
-
-  return {
-    id: '', // O ID será gerado pelo banco de dados
-    plate: data.Request.DataKeys.Vrm,
-    make: data.Response.DataItems.VehicleRegistration.Make,
-    model: data.Response.DataItems.SmmtDetails.ModelVariant,
-    series: data.Response.DataItems.SmmtDetails.Series,
-    type: data.Response.DataItems.VehicleRegistration.VehicleClass || '',
-    year_of_manufacture: parseInt(data.Response.DataItems.VehicleRegistration.YearOfManufacture),
-    year_registration: data.Response.DataItems.VehicleRegistration.YearOfFirstRegistration,
-    engine_capacity: data.Response.DataItems.VehicleRegistration.EngineCapacity,
-    power: '',
-    mileage: 0,
-    transmission: '',
-    fuel_type: data.Response.DataItems.VehicleRegistration.FuelType,
-    color: data.Response.DataItems.VehicleRegistration.Colour,
-    vin: data.Response.DataItems.VehicleRegistration.Vin,
-    engine_number: data.Response.DataItems.VehicleRegistration.EngineNumber,
-    status: '',
-    sale_price: '',
-    rental_price: '',
-    document_status: '',
-    insurance_status: '',
-    maintenance_status: '',
-    mot: '',
-    tracker: false,
-    tracker_observation: '',
-    observations: '',
-    company_id: '',
-    created_at: '',
-    updated_at: '',
-  };
+export const fetchVehicleData = async (vehicleId: string) => {
+  const response = await fetch(`/api/get-vehicle-data?vehicleId=${vehicleId}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch vehicle data');
+  }
+  return response.json();
 };

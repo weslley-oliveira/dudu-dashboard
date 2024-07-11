@@ -1,6 +1,7 @@
 'use client';
 
-import { CustomerField, Vehicle } from '@/app/lib/vehicles/definitions';
+import { Vehicle } from '@/app/lib/vehicles/definitions';
+import { CustomerField } from '@/app/lib/customers/definitions';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 import { createVehicle } from '@/app/lib/vehicles/actions';
