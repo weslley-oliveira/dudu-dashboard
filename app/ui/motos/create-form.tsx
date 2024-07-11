@@ -83,7 +83,7 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
       {vehicleData && (
         <>
           {/* Hidden fields to pass vehicle data for validation */}
-          <input type="hidden" name="plate" value={vehicleData.registration} />
+          <input type="hidden" name="plate" value={vehicleData.plate} />
           <input type="hidden" name="make" value={vehicleData.make} />
           <input type="hidden" name="model" value={vehicleData.model} />
           <input type="hidden" name="series" value={vehicleData.series} />
