@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
   console.log('Environment variables:');
   console.log('API URL:', apiUrl);
-  console.log('API Key:', apiKey ? '[REDACTED]' : 'Not set');
+  console.log('API Key:', apiKey );
   console.log('Base URL:', baseUrl);
 
   if (!apiUrl || !apiKey || !baseUrl) {
@@ -39,6 +39,8 @@ export async function GET(request: NextRequest) {
 
     const vehicleApiUrl = `${apiUrl}${vehicleId}`;
     console.log('Fetching vehicle data from:', vehicleApiUrl);
+    console.log('TOKEN:', tokenData.access_token);
+    console.log('API-KEY:', apiKey);
 
     const vehicleResponse = await fetch(vehicleApiUrl, {
       method: 'GET',
@@ -49,6 +51,7 @@ export async function GET(request: NextRequest) {
       },
     });
 
+    console.log('Vehicle status: resposta', vehicleResponse);
     console.log('Vehicle API response status:', vehicleResponse.status);
     console.log('Vehicle API response headers:', JSON.stringify(Object.fromEntries(vehicleResponse.headers), null, 2));
 

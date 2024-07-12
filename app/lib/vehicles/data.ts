@@ -179,7 +179,7 @@ export async function fetchVehicles(): Promise<Vehicle[]> {
     throw new Error('Failed to fetch vehicles.');
   }
 }
-
+ 
 export const fetchVehicleData = async (vehicleId: string) => {
   const response = await fetch(`/api/get-vehicle-data?vehicleId=${vehicleId}`);
   if (!response.ok) {
