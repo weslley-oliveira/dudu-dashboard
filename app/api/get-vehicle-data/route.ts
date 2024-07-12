@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
   console.log('Environment variables:');
   console.log('API URL:', apiUrl);
-  console.log('API Key:', apiKey );
+  console.log('API Key:', apiKey ? '[REDACTED]' : 'Not set');
   console.log('Base URL:', baseUrl);
 
   if (!apiUrl || !apiKey || !baseUrl) {
