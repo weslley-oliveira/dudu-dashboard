@@ -16,14 +16,12 @@ export async function fetchFilteredSales(query: string, currentPage: number): Pr
         customer_id AS "customerId",
         vehicle_id AS "vehicleId",
         total,
-        unit_of_measurement AS "unitOfMeasurement",
         status,
         sale_code AS "saleCode",
         created_at AS "createdAt"
       FROM sales
       WHERE 
         total::text ILIKE ${'%' + query + '%'}
-        OR unit_of_measurement ILIKE ${'%' + query + '%'}
         OR status ILIKE ${'%' + query + '%'}
         OR sale_code ILIKE ${'%' + query + '%'}
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
@@ -45,7 +43,6 @@ export async function fetchSalesPages(query: string): Promise<number> {
       FROM sales
       WHERE 
         total::text ILIKE ${'%' + query + '%'}
-        OR unit_of_measurement ILIKE ${'%' + query + '%'}
         OR status ILIKE ${'%' + query + '%'}
         OR sale_code ILIKE ${'%' + query + '%'}
     `;
@@ -67,7 +64,6 @@ export async function fetchSaleById(id: string): Promise<Sale | null> {
         customer_id AS "customerId",
         vehicle_id AS "vehicleId",
         total,
-        unit_of_measurement AS "unitOfMeasurement",
         status,
         sale_code AS "saleCode",
         created_at AS "createdAt"
@@ -96,7 +92,6 @@ export async function fetchSales(): Promise<Sale[]> {
         customer_id AS "customerId",
         vehicle_id AS "vehicleId",
         total,
-        unit_of_measurement AS "unitOfMeasurement",
         status,
         sale_code AS "saleCode",
         created_at AS "createdAt"

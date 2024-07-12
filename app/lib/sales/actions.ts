@@ -11,21 +11,18 @@ const SaleSchema = z.object({
   customerId: z.string().uuid(),
   vehicleId: z.string().uuid().optional(),
   total: z.number().positive(),
-  unitOfMeasurement: z.string().min(1, { message: 'Unit of measurement is required.' }),
-  status: z.string().min(1, { message: 'Status is required.' }), // Novo campo de status
-  saleCode: z.string(), // Novo campo de saleCode
+  status: z.string().optional(), // Make status optional in the schema
+  saleCode: z.string().optional(), // Make saleCode optional in the schema
   createdAt: z.string(),
 });
 
-const CreateSale = SaleSchema.omit({ id: true, createdAt: true });
+const CreateSale = SaleSchema.omit({ id: true, status: true, saleCode: true, createdAt: true }); // Remove status and saleCode from CreateSale
 const UpdateSale = SaleSchema.omit({ createdAt: true });
 
 // This is temporary
 export type State = {
   errors?: {
     total?: string[];
-    unitOfMeasurement?: string[];
-    status?: string[];
   };
   message?: string | null;
 };
@@ -39,10 +36,16 @@ async function generateSaleCode(): Promise<string> {
     LIMIT 1
   `;
 
-  const latestCode = latestSale.rows[0]?.sale_code || 'inv-[000]';
-  const latestNumber = parseInt(latestCode.replace('inv-[', '').replace(']', ''), 10);
+  const latestCode = latestSale.rows[0]?.sale_code || 'inv-000';
+  const latestNumber = parseInt(latestCode.replace('inv-', ''), 10);
+  
+  // Check if latestNumber is a valid number
+  if (isNaN(latestNumber)) {
+    throw new Error('Failed to generate sale code: invalid latest sale code.');
+  }
+  
   const newNumber = latestNumber + 1;
-  return `inv-[${newNumber.toString().padStart(3, '0')}]`;
+  return `inv-${newNumber.toString().padStart(3, '0')}`;
 }
 
 export async function createSale(prevState: State, formData: FormData) {
@@ -51,8 +54,6 @@ export async function createSale(prevState: State, formData: FormData) {
     customerId: formData.get('customerId'),
     vehicleId: formData.get('vehicleId') || null,
     total: parseFloat(formData.get('total') as string),
-    unitOfMeasurement: formData.get('unitOfMeasurement'),
-    status: formData.get('status'),
   });
 
   // If form validation fails, return errors early. Otherwise, continue.
@@ -69,18 +70,19 @@ export async function createSale(prevState: State, formData: FormData) {
 
   // Prepare data for insertion into the database
   const {
-    customerId, vehicleId, total, unitOfMeasurement, status
+    customerId, vehicleId, total
   } = validatedFields.data;
+  const status = 'pending'; // Default status
   const createdAt = new Date().toISOString();
 
   // Insert data into the database
   try {
     await sql`
       INSERT INTO sales (
-        customer_id, vehicle_id, total, unit_of_measurement, status, sale_code, created_at
+        customer_id, vehicle_id, total, status, sale_code, created_at
       )
       VALUES (
-        ${customerId}, ${vehicleId}, ${total}, ${unitOfMeasurement}, ${status}, ${saleCode}, ${createdAt}
+        ${customerId}, ${vehicleId}, ${total}, ${status}, ${saleCode}, ${createdAt}
       )
     `;
   } catch (error) {
@@ -105,7 +107,6 @@ export async function updateSale(
     customerId: formData.get('customerId'),
     vehicleId: formData.get('vehicleId') || null,
     total: parseFloat(formData.get('total') as string),
-    unitOfMeasurement: formData.get('unitOfMeasurement'),
     status: formData.get('status'),
   });
 
@@ -117,7 +118,7 @@ export async function updateSale(
   }
 
   const {
-    customerId, vehicleId, total, unitOfMeasurement, status
+    customerId, vehicleId, total, status
   } = validatedFields.data;
   const updatedAt = new Date().toISOString();
 
@@ -126,7 +127,7 @@ export async function updateSale(
       UPDATE sales
       SET 
         customer_id = ${customerId}, vehicle_id = ${vehicleId}, total = ${total}, 
-        unit_of_measurement = ${unitOfMeasurement}, status = ${status}, updated_at = ${updatedAt}
+        status = ${status}, updated_at = ${updatedAt}
       WHERE id = ${id}
     `;
   } catch (error) {

@@ -3,8 +3,7 @@ export type Sale = {
   customerId: string;
   vehicleId: string | null; // Vehicle is optional
   total: number;
-  unitOfMeasurement: string;
-  status: string;
-  saleCode: string; // New sale code field
-  createdAt: string;
+  status: string; // Sale status
+  saleCode: string; // Sale code
+  createdAt: string; // Creation timestamp
 };
