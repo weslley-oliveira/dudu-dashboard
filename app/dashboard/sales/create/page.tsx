@@ -1,5 +1,6 @@
 import { fetchCustomers } from '@/app/lib/customers/data';
 import { fetchVehicles } from '@/app/lib/vehicles/data';
+import { fetchParts } from '@/app/lib/parts/data';
 import Form from '@/app/ui/sales/create-form';
 import Breadcrumbs from '@/app/ui/sales/breadcrumbs';
 import { Metadata } from 'next';
@@ -11,6 +12,7 @@ export const metadata: Metadata = {
 export default async function Page() {
   const customers = await fetchCustomers();
   const vehicles = await fetchVehicles();
+  const parts = await fetchParts();
 
   return (
     <main>
@@ -24,7 +26,7 @@ export default async function Page() {
           },
         ]}
       />
-      <Form customers={customers} vehicles={vehicles} />
+      <Form customers={customers} vehicles={vehicles} parts={parts} />
     </main>
   );
 }

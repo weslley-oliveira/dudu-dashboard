@@ -16,7 +16,7 @@ const PartSchema = z.object({
   partNumber: z.string(),
   brand: z.string(),
   unitOfMeasurement: z.string().min(1, { message: 'Unit of measurement is required.' }),
-  unitPrice: z.number().min(0, { message: 'Unit price must be non-negative.' }),
+  salePrice: z.number().min(0, { message: 'Sale price must be non-negative.' }),
   quantity: z.number().min(0, { message: 'Quantity must be non-negative.' }),
   companyId: z.string().min(1, { message: 'Company is required' }),
   productUrl: z.string(),
@@ -33,7 +33,7 @@ export type State = {
     partNumber?: string[];
     brand?: string[];
     unitOfMeasurement?: string[];
-    unitPrice?: string[];
+    salePrice?: string[];
     quantity?: string[];
     productUrl?: string[];
   };
@@ -49,7 +49,7 @@ export async function createPart(prevState: State, formData: FormData) {
     partNumber: formData.get('partNumber'),
     brand: formData.get('brand'),
     unitOfMeasurement: formData.get('unitOfMeasurement'),
-    unitPrice: parseFloat(formData.get('unitPrice') as string),
+    salePrice: parseFloat(formData.get('salePrice') as string),
     quantity: parseInt(formData.get('quantity') as string),
     companyId: formData.get('companyId'),
     productUrl: formData.get('productUrl'),
@@ -65,26 +65,24 @@ export async function createPart(prevState: State, formData: FormData) {
 
   // Preparar dados para inserção no banco de dados
   const {
-    description, oemNumber, partNumber, brand, unitOfMeasurement, unitPrice, quantity,
+    description, oemNumber, partNumber, brand, unitOfMeasurement, salePrice, quantity,
     companyId, productUrl
   } = validatedFields.data;
-
-  // Formatar array de URLs de imagens para a consulta SQL
 
   // Inserir dados no banco de dados
   try {
     await sql`
       INSERT INTO parts (
-        description, oem_number, part_number, brand, unit_of_measurement, unit_price, quantity, 
+        description, oem_number, part_number, brand, unit_of_measurement, sale_price, quantity, 
         company_id, product_url
       )
       VALUES (
-        ${description}, ${oemNumber}, ${partNumber}, ${brand}, ${unitOfMeasurement}, ${unitPrice}, ${quantity}, 
+        ${description}, ${oemNumber}, ${partNumber}, ${brand}, ${unitOfMeasurement}, ${salePrice}, ${quantity}, 
         ${companyId}, ${productUrl}
       )
     `;
   } catch (error) {
-    console.log("YYYYYY", error)
+    console.log("Database Error:", error)
     // Se ocorrer um erro no banco de dados, retornar um erro específico.
     return {
       message: 'Database Error: Failed to Create Part.',
@@ -107,7 +105,7 @@ export async function updatePart(
     partNumber: formData.get('partNumber'),
     brand: formData.get('brand'),
     unitOfMeasurement: formData.get('unitOfMeasurement'),
-    unitPrice: parseFloat(formData.get('unitPrice') as string),
+    salePrice: parseFloat(formData.get('salePrice') as string),
     quantity: parseInt(formData.get('quantity') as string),
     companyId: formData.get('companyId'),
     productUrl: formData.get('productUrl'),
@@ -121,7 +119,7 @@ export async function updatePart(
   }
 
   const {
-    description, oemNumber, partNumber, brand, unitOfMeasurement, unitPrice, quantity,
+    description, oemNumber, partNumber, brand, unitOfMeasurement, salePrice, quantity,
     companyId, productUrl
   } = validatedFields.data;
 
@@ -130,7 +128,7 @@ export async function updatePart(
       UPDATE parts
       SET 
         description = ${description}, oem_number = ${oemNumber}, part_number = ${partNumber}, 
-        brand = ${brand}, unit_of_measurement = ${unitOfMeasurement}, unit_price = ${unitPrice}, 
+        brand = ${brand}, unit_of_measurement = ${unitOfMeasurement}, sale_price = ${salePrice}, 
         quantity = ${quantity}, company_id = ${companyId}, product_url = ${productUrl}
       WHERE id = ${id}
     `;
@@ -150,7 +148,7 @@ export async function deletePart(id: string) {
     const part = result.rows[0];
     const productUrl = part?.productUrl;
 
-    console.log("testetetetetetet",productUrl)
+    console.log("Product URL:", productUrl)
 
     if (productUrl) {
       // Extraia o nome do arquivo do URL

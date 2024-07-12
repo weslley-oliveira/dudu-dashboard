@@ -9,7 +9,7 @@ import { redirect } from 'next/navigation';
 const SaleSchema = z.object({
   id: z.string().uuid(),
   customerId: z.string().uuid(),
-  vehicleId: z.string().uuid().optional(),
+  vehicleId: z.string().uuid().nullable(), // Make vehicleId nullable
   total: z.number().positive(),
   status: z.string().optional(), // Make status optional in the schema
   saleCode: z.string().optional(), // Make saleCode optional in the schema

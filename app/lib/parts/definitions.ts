@@ -5,7 +5,7 @@ export interface Part {
   partNumber: string; // Número de catálogo da peça
   brand: string; // Marca da peça
   unitOfMeasurement: string; // Unidade de medida (ex: unidade, caixa)
-  unitPrice: number; // Valor unitário da peça
+  salePrice: number; // Valor de venda unitário da peça
   quantity: number; // Quantidade em estoque
   companyId: string; // UUID da empresa associada
   productUrl: string; // URL do produto no catálogo
@@ -17,3 +17,9 @@ export interface Motorcycle {
   model: string; // Modelo
   year: number; // Ano de fabricação
 }
+export type PartField = {
+  id: string;
+  description: string;
+  brand: string;
+  sale_price: number; // Adicionar campo de preço de venda
+};

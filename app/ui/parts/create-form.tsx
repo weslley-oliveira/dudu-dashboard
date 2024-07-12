@@ -137,29 +137,29 @@ export default function Form({ companies }: { companies: CompaniesField[] }) {
           </div>
         </div>
 
-        {/* Unit Price, Quantity, and UOM */}
+        {/* Sale Price, Quantity, and UOM */}
         <div className="mb-4 flex gap-4">
           <div className="flex-1">
-            <label htmlFor="unitPrice" className="mb-2 block text-sm font-medium">
-              Unit Price
+            <label htmlFor="salePrice" className="mb-2 block text-sm font-medium">
+              Sale Price
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
                 <input
-                  id="unitPrice"
-                  name="unitPrice"
+                  id="salePrice"
+                  name="salePrice"
                   type="number"
                   step="0.01"
                   placeholder="Enter price"
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                  aria-describedby="unitPrice-error"
+                  aria-describedby="salePrice-error"
                 />
                 <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
             </div>
-            <div id="unitPrice-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.unitPrice &&
-                state.errors.unitPrice.map((error: string) => (
+            <div id="salePrice-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.salePrice &&
+                state.errors.salePrice.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>
@@ -224,7 +224,7 @@ export default function Form({ companies }: { companies: CompaniesField[] }) {
         {/* Company */}
         <div className="mb-4">
           <label htmlFor="companyId" className="mb-2 block text-sm font-medium">
-          {`Company${`'`}s Unit`}
+            {`Company${`'`}s Unit`}
           </label>
           <div className="relative">
             <select
@@ -261,10 +261,10 @@ export default function Form({ companies }: { companies: CompaniesField[] }) {
             Photo
           </label>
           <UploadForm onFileUpload={handleFileUpload} />
-          <input id="productUrl" type="hidden" name="productUrl" value={String(fileUrl)} aria-describedby="productUrl"/>
-          <div id="productUrl" aria-live="polite" aria-atomic="true">
-            {state.errors?.companyId &&
-              state.errors.companyId.map((error: string) => (
+          <input id="productUrl" type="hidden" name="productUrl" value={String(fileUrl)} aria-describedby="productUrl-error"/>
+          <div id="productUrl-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.productUrl &&
+              state.errors.productUrl.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>

@@ -40,7 +40,7 @@ export default async function PartsTable({
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {formatCurrency(part.unitPrice)}
+                      {formatCurrency(part.salePrice)}
                     </p>
                     <p>Quantity: {part.quantity}</p>
                   </div>
@@ -62,7 +62,7 @@ export default async function PartsTable({
                   Brand
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Unit Price
+                  Sale Price
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Quantity
@@ -94,7 +94,7 @@ export default async function PartsTable({
                     {part.brand}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatCurrency(part.unitPrice)}
+                    {formatCurrency(part.salePrice)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {part.quantity}

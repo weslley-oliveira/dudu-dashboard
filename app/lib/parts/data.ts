@@ -1,5 +1,5 @@
 import { sql } from '@vercel/postgres';
-import { Part } from './definitions';
+import { Part, PartField } from './definitions';
 import { unstable_noStore as noStore } from 'next/cache';
 
 const ITEMS_PER_PAGE = 6;
@@ -17,7 +17,7 @@ export async function fetchFilteredParts(query: string, currentPage: number): Pr
         part_number AS "partNumber",
         brand,
         unit_of_measurement AS "unitOfMeasurement",
-        unit_price AS "unitPrice",
+        sale_price AS "salePrice",
         quantity,
         company_id AS "companyId",
         product_url AS "productUrl"
@@ -68,7 +68,7 @@ export async function fetchPartById(id: string): Promise<Part | null> {
         part_number AS "partNumber",
         brand,
         unit_of_measurement AS "unitOfMeasurement",
-        unit_price AS "unitPrice",
+        sale_price AS "salePrice",
         quantity,
         company_id AS "companyId",
         product_url AS "productUrl",
@@ -88,23 +88,15 @@ export async function fetchPartById(id: string): Promise<Part | null> {
   }
 }
 
-
-export async function fetchParts(): Promise<Part[]> {
-  noStore();
-
-  try {
-    const data = await sql<Part>`
-      SELECT
-        id,
-        description,
-        brand,
-        product_url
-      FROM parts
-    `;
-
-    return data.rows;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch parts.');
-  }
+export async function fetchParts(): Promise<PartField[]> {
+  const parts = await sql<PartField>`
+    SELECT
+      id,
+      description,
+      brand,
+      sale_price,
+      product_url AS "productUrl"
+    FROM parts
+  `;
+  return parts.rows;
 }
