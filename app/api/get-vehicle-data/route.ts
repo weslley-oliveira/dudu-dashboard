@@ -11,8 +11,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Vehicle ID is required' }, { status: 400 });
   }
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  const apiKey = process.env.NEXT_PUBLIC_API_KEY;
+  const apiUrl = process.env.NEXT_PUBLIC_MOT_API_URL;
+  const apiKey = process.env.NEXT_PUBLIC_MOT_API_KEY;
   const baseUrl = process.env.NEXTAUTH_URL;
 
   console.log('Environment variables:');
@@ -36,11 +36,10 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('Access token retrieved successfully');
+    console.log('Token:', tokenData.access_token);
 
-    const vehicleApiUrl = `${apiUrl}${vehicleId}`;
+    const vehicleApiUrl = `${apiUrl}/${vehicleId}`;
     console.log('Fetching vehicle data from:', vehicleApiUrl);
-    console.log('TOKEN:', tokenData.access_token);
-    console.log('API-KEY:', apiKey);
 
     const vehicleResponse = await fetch(vehicleApiUrl, {
       method: 'GET',
@@ -51,19 +50,19 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    console.log('Vehicle status: resposta', vehicleResponse);
     console.log('Vehicle API response status:', vehicleResponse.status);
-    console.log('Vehicle API response headers:', JSON.stringify(Object.fromEntries(vehicleResponse.headers), null, 2));
+    console.log('Vehicle API response headers:', JSON.stringify(Object.fromEntries(vehicleResponse.headers.entries()), null, 2));
 
     if (!vehicleResponse.ok) {
       const errorText = await vehicleResponse.text();
       console.error('Failed to fetch vehicle data. Status:', vehicleResponse.status, 'Response:', errorText);
-      
+
       if (vehicleResponse.status === 403) {
-        return NextResponse.json({ 
-          error: 'Permission Denied', 
+        console.error('Access Denied: Check your API key and permissions.');
+        return NextResponse.json({
+          error: 'Permission Denied',
           details: 'The API returned a 403 Forbidden error. Please check your API key and permissions.',
-          apiResponse: errorText
+          apiResponse: errorText,
         }, { status: 403 });
       }
 

@@ -1,5 +1,10 @@
-import React from 'react';
-
-export default function Page() {
-  return <div>Sales Page</div>;
-}
+export type Sale = {
+  id: string;
+  customerId: string;
+  vehicleId: string | null; // Vehicle is optional
+  total: number;
+  unitOfMeasurement: string;
+  status: string;
+  saleCode: string; // New sale code field
+  createdAt: string;
+};

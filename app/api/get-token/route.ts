@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const clientId = process.env.NEXT_PUBLIC_CLIENT_ID;
-  const clientSecret = process.env.NEXT_PUBLIC_CLIENT_SECRET;
-  const tokenUrl = process.env.NEXT_PUBLIC_ACCESS_TOKEN_URL;
-  const scope = process.env.NEXT_PUBLIC_API_SCOPE;
+  const clientId = process.env.NEXT_PUBLIC_MOT_CLIENT_ID;
+  const clientSecret = process.env.NEXT_PUBLIC_MOT_CLIENT_SECRET;
+  const tokenUrl = process.env.NEXT_PUBLIC_MOT_ACCESS_TOKEN_URL;
+  const scope = process.env.NEXT_PUBLIC_MOT_API_SCOPE;
 
   if (!clientId || !clientSecret || !tokenUrl || !scope) {
     console.error('Missing required environment variables');
