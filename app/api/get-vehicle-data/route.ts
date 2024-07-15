@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
 
   console.log('Received request for vehicle data. Vehicle ID:', vehicleId);
 
-  if (!vehicleId) {
+  if (!vehicleId) { 
     console.error('No vehicle ID provided');
     return NextResponse.json({ error: 'Vehicle ID is required' }, { status: 400 });
   }
@@ -27,19 +27,17 @@ export async function GET(request: NextRequest) {
 
   try {
     console.log('Attempting to get access token');
-    const tokenResponse = await fetch(`${baseUrl}/api/get-token`);
+    const tokenResponse = await fetch(`${baseUrl}/api/gettoken?client_id=${process.env.NEXT_PUBLIC_MOT_CLIENT_ID}&client_secret=${process.env.NEXT_PUBLIC_MOT_CLIENT_SECRET}&tenantId=${process.env.NEXT_PUBLIC_MOT_TENANT_ID}`);
     const tokenData = await tokenResponse.json();
 
     if (!tokenResponse.ok || !tokenData.access_token) {
-      console.error('Failed to retrieve access token:', tokenData);
+      console.error('Failed to retrieve access token:');
       return NextResponse.json({ error: 'Failed to retrieve access token', details: tokenData }, { status: tokenResponse.status });
     }
 
     console.log('Access token retrieved successfully');
-    console.log('Token:', tokenData.access_token);
 
     const vehicleApiUrl = `${apiUrl}/${vehicleId}`;
-    console.log('Fetching vehicle data from:', vehicleApiUrl);
 
     const vehicleResponse = await fetch(vehicleApiUrl, {
       method: 'GET',
@@ -51,7 +49,6 @@ export async function GET(request: NextRequest) {
     });
 
     console.log('Vehicle API response status:', vehicleResponse.status);
-    console.log('Vehicle API response headers:', JSON.stringify(Object.fromEntries(vehicleResponse.headers.entries()), null, 2));
 
     if (!vehicleResponse.ok) {
       const errorText = await vehicleResponse.text();

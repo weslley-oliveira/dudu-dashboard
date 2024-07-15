@@ -8,10 +8,11 @@ import { createVehicle } from '@/app/lib/vehicles/actions';
 import { useFormState } from 'react-dom';
 import { useState } from 'react';
 import { fetchVehicleData } from '@/app/lib/vehicles/data';
-import VehicleCard from '@/app/ui/motos/vehicle-card';
-import TextInput from '@/app/ui/motos/form/TextInput';
+import VehicleCard from '@/app/ui/vehicles/vehicle-card';
+import TextInput from '@/app/ui/vehicles/form/TextInput';
+import { getYearFromDate } from '@/app/lib/utils';
 
-export default function Form({ customers }: { customers: CustomerField[] }) {
+export default function Form({ companies }: { companies: CustomerField[] }) {
   const initialState = { message: '', errors: {} };
   const [state, dispatch] = useFormState(createVehicle, initialState);
   const [plate, setPlate] = useState('');
@@ -22,9 +23,9 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
   const [documentStatus, setDocumentStatus] = useState('valid');
   const [insuranceStatus, setInsuranceStatus] = useState('active');
 
-const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-  setInsuranceStatus(e.target.value);
-};
+  const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setInsuranceStatus(e.target.value);
+  };
 
   const handlePlateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPlate(e.target.value);
@@ -33,7 +34,6 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
   const handleFetchData = async () => {
     try {
       const data: Vehicle = await fetchVehicleData(plate);
-      console.log("chegando", data)
       setVehicleData(data);
     } catch (error) {
       console.error('Erro ao buscar dados do veículo:', error);
@@ -54,12 +54,12 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
     setDocumentStatus(e.target.value);
   };
 
+  console.log("AQUI", vehicleData?.motTests[0].odometerValue)
   return (
     <form action={dispatch} onKeyDown={handleKeyDown}>
       {/* Plate Search */}
       <div className="mb-4">
         <label htmlFor="plate" className="mb-2 block text-sm font-medium">
-          Placa do Veículo:
         </label>
         <div className="relative flex gap-4">
           <input
@@ -83,22 +83,26 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
       {vehicleData && (
         <>
           {/* Hidden fields to pass vehicle data for validation */}
-          <input type="hidden" name="plate" value={vehicleData.plate} />
+          <input type="hidden" name="plate" value={vehicleData.registration} />
           <input type="hidden" name="make" value={vehicleData.make} />
           <input type="hidden" name="model" value={vehicleData.model} />
           <input type="hidden" name="series" value={vehicleData.series} />
           <input type="hidden" name="type" value={vehicleData.type} />
-          <input type="hidden" name="year_of_manufacture" value={vehicleData.year_of_manufacture} />
-          <input type="hidden" name="year_registration" value={vehicleData.year_registration} />
-          <input type="hidden" name="engine_capacity" value={vehicleData.engine_capacity || ''} />
+          <input type="hidden" name="year_registration" value={vehicleData.year_registration || ''} />
+          <input type="hidden" name="engineSize" value={vehicleData.engineSize || ''} />
           <input type="hidden" name="power" value={vehicleData.power || ''} />
           <input type="hidden" name="transmission" value={vehicleData.transmission || ''} />
-          <input type="hidden" name="fuel_type" value={vehicleData.fuel_type || ''} />
-          <input type="hidden" name="color" value={vehicleData.color || ''} />
+          <input type="hidden" name="fuel_type" value={vehicleData.fuelType || ''} />
+          <input type="hidden" name="color" value={vehicleData.primaryColour || ''} />
           <input type="hidden" name="vin" value={vehicleData.vin} />
           <input type="hidden" name="engine_number" value={vehicleData.engine_number} />
           <input type="hidden" name="maintenance_status" value={vehicleData.maintenance_status || ''} />
           <input type="hidden" name="tracker_observation" value={vehicleData.tracker_observation || ''} />
+          <input type="hidden" name="mot" value={vehicleData.motTests[0].expiryDate || ''} />
+          <input type="hidden" name="status" value="available" />
+          <input type="hidden" name="document_status" value="" />
+          <input type="hidden" name="insurance_status" value="" />
+          <input type="hidden" name="year_of_manufacture" value={getYearFromDate(vehicleData.manufactureDate)} />
 
           {/* Editable Fields */}
           <TextInput
@@ -107,11 +111,20 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
             label="Mileage"
             type="number"
             placeholder="Enter mileage"
-            value={String(vehicleData.mileage || 0)}
+            value={String(vehicleData?.motTests[0].odometerValue)}
             error={state.errors?.mileage?.[0]}
           />
 
-          <div className='flex gap-2 w-full'>
+          
+            <TextInput
+              id="purchase_price"
+              name="purchase_price"
+              label="Purchase Price"
+              type="number"
+              placeholder="Enter sale price"
+              value={vehicleData.purchase_price}
+              error={state.errors?.purchase_price?.[0]}
+            />
             <TextInput
               id="sale_price"
               name="sale_price"
@@ -131,59 +144,8 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
               value={String(vehicleData.rental_price || '')}
               error={state.errors?.rental_price?.[0]}
             />
-          </div>
-
-          {/* MOT */}
-          <div className="mb-4">
-            <label htmlFor="mot" className="mb-2 block text-sm font-medium">
-              MOT until
-            </label>
-            <input
-              id="mot"
-              name="mot"
-              type="date"
-              defaultValue={vehicleData?.mot || ''}
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="mot-error"
-            />
-            <div id="mot-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.mot &&
-                state.errors.mot.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
-          </div>
-
-          <div className="mb-4">
-            <label htmlFor="status" className="mb-2 block text-sm font-medium">
-              Status
-            </label>
-            <select
-              id="status"
-              name="status"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              value={status}
-              onChange={handleStatusChange}
-              aria-describedby="status-error"
-            >
-              <option value="Available">Available</option>
-              <option value="rented">Rented</option>
-              <option value="sold">Sold</option>
-              <option value="private-storage">Private Storage</option>
-              <option value="claim-storage">Claim Storage</option>
-            </select>
-            <div id="status-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.status &&
-                state.errors.status.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
-          </div>
-
+          
+          {/* 
           <div className="mb-4">
             <label htmlFor="document_status" className="mb-2 block text-sm font-medium">
               Document Status
@@ -207,8 +169,8 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
                   </p>
                 ))}
             </div>
-          </div>
-
+          </div> */}
+          {/* 
           <div className="mb-4">
   <label htmlFor="insurance_status" className="mb-2 block text-sm font-medium">
     Insurance Status
@@ -232,7 +194,7 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
         </p>
       ))}
   </div>
-</div>
+</div> */}
 
           <div className="mb-4">
             <label htmlFor="company_id" className="mb-2 block text-sm font-medium">
@@ -244,9 +206,9 @@ const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
             >
               <option value="">Select a company</option>
-              {customers.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
+              {companies.map((company) => (
+                <option key={company.id} value={company.id}>
+                  {company.name}
                 </option>
               ))}
             </select>

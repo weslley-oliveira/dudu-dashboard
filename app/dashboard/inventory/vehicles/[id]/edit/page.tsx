@@ -1,4 +1,4 @@
-import Form from '@/app/ui/motos/edit-form';
+import Form from '@/app/ui/vehicles/edit-form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchVehicleById } from '@/app/lib/vehicles/data';
 import { notFound } from 'next/navigation';
@@ -24,10 +24,10 @@ export default async function Page({ params }: { params: { id: string } }) {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Vehicles', href: '/dashboard/motos' },
+          { label: 'Vehicles', href: '/dashboard/inventory/vehicles' },
           {
             label: 'Edit Vehicle',
-            href: `/dashboard/motos/${id}/edit`,
+            href: `/dashboard/inventory/vehicles/${id}/edit`,
             active: true,
           },
         ]}

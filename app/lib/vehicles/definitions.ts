@@ -1,24 +1,32 @@
 
 // app/lib/vehicles/definitions.ts
+export interface MotTest {
+  odometerValue: number;
+  expiryDate: number;
+  // Adicione outros campos relevantes aqui, se houver.
+}
+
 export interface Vehicle {
   id: string;
-  plate: string;
+  registration: string;
   make: string;
   model: string;
   series: string;
   type: string;
-  year_of_manufacture: number;
+  manufacturedate: number;
+  manufactureDate: number;
   year_registration: string;
-  engine_capacity: string;
+  engineSize: string;
   power: string;
   mileage: number;
   transmission: string;
-  fuel_type: string;
-  color: string;
+  fuelType: string;
+  primaryColour: string;
   vin: string;
   engine_number: string;
   status: string;
   sale_price: string;
+  purchase_price: string;
   rental_price: string;
   document_status: string;
   insurance_status: string;
@@ -30,6 +38,7 @@ export interface Vehicle {
   company_id: string; // para onde a peca/moto/office materiasl vao estar localizados
   created_at: string; 
   updated_at: string;
+  motTests: MotTest[];
 }
 
 export type VehicleField = {

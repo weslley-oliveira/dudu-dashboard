@@ -1,6 +1,7 @@
-import { UpdateVehicle, DeleteVehicle } from '@/app/ui/motos/buttons';
+import { UpdateVehicle, DeleteVehicle } from '@/app/ui/vehicles/buttons';
 import { fetchFilteredVehicles } from '@/app/lib/vehicles/data';
 import { Vehicle } from '@/app/lib/vehicles/definitions';
+import { checkExpiryDate } from '@/app/lib/utils';
 
 export default async function VehiclesTable({
   query,
@@ -23,17 +24,21 @@ export default async function VehiclesTable({
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    <div className="mb-2 flex items-center">
-                      <p>{vehicle.make} {vehicle.model}</p>
+                    <p className="text-sm text-gray-500">{vehicle.registration}</p>
+                    <div className="my-2 flex items-center">
+                      <p><span className='font-semibold'>{vehicle.make}</span> {vehicle.model}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{vehicle.plate}</p>
                   </div>
                   <p className="text-sm text-gray-500">{vehicle.status}</p>
+                  
                 </div>
+                <div className='pt-2 flex items-center justify-between'>
+                    <p>MOT</p>
+                    <p>{checkExpiryDate(vehicle.mot)}</p>
+                  </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl font-medium">{vehicle.series}</p>
-                    <p>{vehicle.engine_capacity}</p>
+                    <p>{vehicle.manufacturedate}</p>
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateVehicle id={vehicle.id} />
@@ -73,7 +78,7 @@ export default async function VehiclesTable({
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    <p>{vehicle.plate}</p>
+                    <p>{vehicle.registration}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {vehicle.make}

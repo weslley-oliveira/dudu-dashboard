@@ -1,6 +1,6 @@
 import { fetchCompanies } from '@/app/lib/data';
-import Form from '@/app/ui/motos/create-form';
-import Breadcrumbs from '@/app/ui/motos/breadcrumbs';
+import Form from '@/app/ui/vehicles/create-form';
+import Breadcrumbs from '@/app/ui/vehicles/breadcrumbs';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -8,21 +8,21 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const customers = await fetchCompanies();
+  const companies = await fetchCompanies();
 
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Vehicles', href: '/dashboard/motos' },
+          { label: 'Vehicles', href: '/dashboard/inventory/vehicles' },
           {
             label: 'Create Vehicle',
-            href: '/dashboard/motos/create',
+            href: '/dashboard/inventory/vehicles/create',
             active: true,
           },
         ]}
       />
-      <Form customers={customers} />
+      <Form companies={companies} />
     </main>
   );
 }

@@ -1,7 +1,7 @@
-import Pagination from '@/app/ui/invoices/pagination';
+import Pagination from '@/app/ui/vehicles/pagination';
 import Search from '@/app/ui/search';
-import Table from '@/app/ui/motos/table';
-import { CreateVehicle } from '@/app/ui/motos/buttons';
+import Table from '@/app/ui/vehicles/table';
+import { CreateVehicle } from '@/app/ui/vehicles/buttons';
 import { lusitana } from '@/app/ui/fonts';
 import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
@@ -9,7 +9,7 @@ import { fetchVehiclesPages } from '@/app/lib/data';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Motos',
+  title: 'Vehicles',
 };
 
 export default async function Page({

@@ -14,7 +14,7 @@ const UkLicensePlate: React.FC<UkLicensePlateProps> = ({ plateNumber }) => {
   const formattedPlate = formatUKNumberPlate(plateNumber);
 
   return (
-    <div className="flex justify-center items-center p-4 bg-yellow-400 border border-black rounded-lg w-72 h-20">
+    <div className="flex justify-center items-center p-4 bg-yellow-400 border border-black rounded-lg md:w-72 h-20">
       <div className="text-black font-bold text-4xl tracking-widest">
         {formattedPlate}
       </div>

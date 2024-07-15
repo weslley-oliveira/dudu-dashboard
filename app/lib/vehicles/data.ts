@@ -12,7 +12,7 @@ export async function fetchFilteredVehicles(query: string, currentPage: number):
     const data = await sql<Vehicle>`
       SELECT
         id,
-        plate,
+        plate as registration,
         make,
         type,
         series,
@@ -27,11 +27,12 @@ export async function fetchFilteredVehicles(query: string, currentPage: number):
         fuel_type,
         status,
         company_id,
-        year_of_manufacture,
+        year_of_manufacture as manufactureDate,
         year_registration,
         mot,
         tracker,
         tracker_observation,
+        purchase_price,
         sale_price,
         rental_price,
         document_status,
@@ -92,7 +93,7 @@ export async function fetchVehicleById(id: string): Promise<Vehicle | null> {
     const data = await sql<Vehicle>`
       SELECT
         id,
-        plate,
+        plate as registration,
         make,
         type,
         series,
@@ -107,17 +108,18 @@ export async function fetchVehicleById(id: string): Promise<Vehicle | null> {
         fuel_type,
         status,
         company_id,
-        year_of_manufacture,
+        year_of_manufacture as manufactureDate,
         year_registration,
         mot,
         tracker,
         tracker_observation,
+        purchase_price,
         sale_price,
         rental_price,
         document_status,
         insurance_status,
         maintenance_status,
-        color,
+        color as primaryColour,
         created_at,
         updated_at
       FROM vehicles

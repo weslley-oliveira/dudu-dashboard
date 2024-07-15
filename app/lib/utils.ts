@@ -21,6 +21,26 @@ export const formatDateToLocal = (
   return formatter.format(date);
 };
 
+export function getYearFromDate(dateString: number) {
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  return year;
+}
+
+export function checkExpiryDate(expiryDateStr: string) {
+
+
+  const expiryDate = new Date(expiryDateStr);
+  console.log("data teste", expiryDate)
+  const currentDate = new Date();
+ 
+  if (expiryDate >= currentDate) {
+    return 'valid';
+  } else {
+    return 'expired';
+  }
+}
+
 export const generateYAxis = (revenue: Revenue[]) => {
   // Calculate what labels we need to display on the y-axis
   // based on highest record and in 1000s
