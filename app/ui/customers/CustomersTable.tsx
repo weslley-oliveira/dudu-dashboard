@@ -50,7 +50,7 @@ export default async function CustomersTable({
                   Customer
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Email
+                  Phone
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Status
@@ -72,7 +72,7 @@ export default async function CustomersTable({
                     </div>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {customer.email}
+                    {customer.phone}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {customer.status}
