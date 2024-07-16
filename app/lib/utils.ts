@@ -1,7 +1,7 @@
 import { Revenue } from './definitions';
 
 export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString('en-GB', {
+  return (amount ).toLocaleString('en-GB', {
     style: 'currency',
     currency: 'GBP',
   });
@@ -40,6 +40,7 @@ export function checkExpiryDate(expiryDateStr: string) {
     return 'expired';
   }
 }
+
 
 export const generateYAxis = (revenue: Revenue[]) => {
   // Calculate what labels we need to display on the y-axis

@@ -32,7 +32,7 @@ const FormSchema = z.object({
   maintenance_status: z.string().optional(),
   mot: z.string().optional(),
   tracker: z.boolean().optional(),
-  tracker_observation: z.union([z.string(), z.null()]).optional(),
+  tracker_observation: z.string().optional(),
   observations: z.string().optional(),
   company_id: z.string().min(1, { message: 'A company is required' }),
   created_at: z.string().optional(),
@@ -79,6 +79,8 @@ export type State = {
 };
 
 export async function createVehicle(prevState: State, formData: FormData) {
+
+  console.log("Tesstete",formData)
   // Validate form fields using Zod
   const validatedFields = CreateVehicle.safeParse({
     plate: formData.get('plate'),
@@ -277,17 +279,17 @@ export async function updateVehicle(id: string, prevState: State, formData: Form
     return { message: 'Database Error: Failed to Update Vehicle.' };
   }
 
-  revalidatePath('/dashboard/motos');
-  redirect('/dashboard/motos');
+  revalidatePath(`/dashboard/inventory/vehicles/${id}`);
+  redirect(`/dashboard/inventory/vehicles/${id}`);
 }
 
 export async function deleteVehicle(id: string) {
   // Delete the vehicle from the database
   try {
     await sql`DELETE FROM vehicles WHERE id = ${id}`;
-    revalidatePath('/dashboard/motos');
-    return { message: 'Deleted Vehicle' };
   } catch (error) {
     return { message: 'Database Error: Failed to Delete Vehicle.' };
   }
+  revalidatePath('/dashboard/inventory/vehicles');
+  redirect('/dashboard/inventory/vehicles');
 }

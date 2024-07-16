@@ -18,14 +18,7 @@ export default function Form({ companies }: { companies: CustomerField[] }) {
   const [plate, setPlate] = useState('');
   const [vehicleData, setVehicleData] = useState<Vehicle | null>(null);
   const [tracker, setTracker] = useState(false);
-  const [trackerObservation, setTrackerObservation] = useState('');
-  const [status, setStatus] = useState('Available');
-  const [documentStatus, setDocumentStatus] = useState('valid');
-  const [insuranceStatus, setInsuranceStatus] = useState('active');
-
-  const handleInsuranceStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setInsuranceStatus(e.target.value);
-  };
+  const [tracker_observation, setTrackerObservation] = useState('');
 
   const handlePlateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPlate(e.target.value);
@@ -46,15 +39,6 @@ export default function Form({ companies }: { companies: CustomerField[] }) {
     }
   };
 
-  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setStatus(e.target.value);
-  };
-
-  const handleDocumentStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setDocumentStatus(e.target.value);
-  };
-
-  console.log("AQUI", vehicleData?.motTests[0].odometerValue)
   return (
     <form action={dispatch} onKeyDown={handleKeyDown}>
       {/* Plate Search */}
@@ -144,57 +128,6 @@ export default function Form({ companies }: { companies: CustomerField[] }) {
               value={String(vehicleData.rental_price || '')}
               error={state.errors?.rental_price?.[0]}
             />
-          
-          {/* 
-          <div className="mb-4">
-            <label htmlFor="document_status" className="mb-2 block text-sm font-medium">
-              Document Status
-            </label>
-            <select
-              id="document_status"
-              name="document_status"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              value={documentStatus}
-              onChange={handleDocumentStatusChange}
-              aria-describedby="document_status-error"
-            >
-              <option value="valid">Valid</option>
-              <option value="waiting-document">Waiting Document</option>
-            </select>
-            <div id="document_status-error" aria-live="polite" aria-atomic="true">
-              {state.errors?.document_status &&
-                state.errors.document_status.map((error: string) => (
-                  <p className="mt-2 text-sm text-red-500" key={error}>
-                    {error}
-                  </p>
-                ))}
-            </div>
-          </div> */}
-          {/* 
-          <div className="mb-4">
-  <label htmlFor="insurance_status" className="mb-2 block text-sm font-medium">
-    Insurance Status
-  </label>
-  <select
-    id="insurance_status"
-    name="insurance_status"
-    className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-    value={insuranceStatus}
-    onChange={handleInsuranceStatusChange}
-    aria-describedby="insurance_status-error"
-  >
-    <option value="active">Active</option>
-    <option value="expired">Expired</option>
-  </select>
-  <div id="insurance_status-error" aria-live="polite" aria-atomic="true">
-    {state.errors?.insurance_status &&
-      state.errors.insurance_status.map((error: string) => (
-        <p className="mt-2 text-sm text-red-500" key={error}>
-          {error}
-        </p>
-      ))}
-  </div>
-</div> */}
 
           <div className="mb-4">
             <label htmlFor="company_id" className="mb-2 block text-sm font-medium">
@@ -262,7 +195,7 @@ export default function Form({ companies }: { companies: CustomerField[] }) {
               label="Tracker Observation"
               type="text"
               placeholder="Enter Tracker Observation"
-              value={trackerObservation}
+              value={tracker_observation}
               error={state.errors?.tracker_observation?.[0]}
               onChange={(e) => setTrackerObservation(e.target.value)}
             />

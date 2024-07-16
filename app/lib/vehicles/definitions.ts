@@ -47,3 +47,36 @@ export type VehicleField = {
   model: string;
   plate: string;
 };
+
+export interface Defect {
+  dangerous: boolean;
+  text: string;
+  type: string;
+}
+
+export interface MOTTest {
+  motTestNumber: string;
+  completedDate: string;
+  expiryDate: string | null;
+  odometerValue: string;
+  odometerUnit: string;
+  testResult: string;
+  defects: Defect[];
+}
+
+export interface VehicleProps {
+  vehicleData: {
+    registration: string;
+    make: string;
+    model: string;
+    firstUsedDate: string;
+    fuelType: string;
+    primaryColour: string;
+    registrationDate: string;
+    manufactureDate: string;
+    engineSize: string;
+    hasOutstandingRecall: string;
+    motTests: MOTTest[];
+  };
+  vehicle: Vehicle;
+}

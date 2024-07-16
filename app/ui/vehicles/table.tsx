@@ -1,4 +1,4 @@
-import { UpdateVehicle, DeleteVehicle } from '@/app/ui/vehicles/buttons';
+import { UpdateVehicle, DeleteVehicle , SeeVehicle} from '@/app/ui/vehicles/buttons';
 import { fetchFilteredVehicles } from '@/app/lib/vehicles/data';
 import { Vehicle } from '@/app/lib/vehicles/definitions';
 import { checkExpiryDate } from '@/app/lib/utils';
@@ -41,8 +41,9 @@ export default async function VehiclesTable({
                     <p>{vehicle.manufacturedate}</p>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <UpdateVehicle id={vehicle.id} />
-                    <DeleteVehicle id={vehicle.id} />
+                    {/* <UpdateVehicle id={vehicle.id} />
+                    <DeleteVehicle id={vehicle.id} /> */}
+                    <SeeVehicle id={vehicle.id}/>
                   </div>
                 </div>
               </div>
@@ -94,8 +95,9 @@ export default async function VehiclesTable({
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateVehicle id={vehicle.id} />
-                      <DeleteVehicle id={vehicle.id} />
+                      {/* <UpdateVehicle id={vehicle.id} />
+                      <DeleteVehicle id={vehicle.id} /> */}
+                      <SeeVehicle id={vehicle.id}/>
                     </div>
                   </td>
                 </tr>

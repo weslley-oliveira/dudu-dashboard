@@ -182,8 +182,26 @@ export async function fetchVehicles(): Promise<Vehicle[]> {
   }
 }
  
+function toLowerCaseString(str: string) {
+  // Verifica se a entrada é uma string
+  if (typeof str !== 'string') {
+    throw new TypeError('Input must be a string');
+  }
+
+  // Converte a string para letras minúsculas
+  return str.toLowerCase();
+}
+
 export const fetchVehicleData = async (vehicleId: string) => {
   const response = await fetch(`/api/get-vehicle-data?vehicleId=${vehicleId}`);
+  if (!response.ok) {
+    throw new Error('Failed to fetch vehicle data');
+  }
+  return response.json();
+};
+
+export const fetchVehicleDataToSee = async (vehicleId: string) => {
+  const response = await fetch(`${process.env.NEXTAUTH_URL}/api/get-vehicle-data?vehicleId=${vehicleId}`);
   if (!response.ok) {
     throw new Error('Failed to fetch vehicle data');
   }

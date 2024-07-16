@@ -25,16 +25,32 @@ export function UpdateVehicle({ id }: { id: string }) {
   );
 }
 
+export function SeeVehicle({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/dashboard/inventory/vehicles/${id}`}
+      className="rounded-md border p-2 bg-blue-500 text-white flex gap-2"
+    >
+      <PlusIcon className="w-5" />
+      <span className="">Details</span>
+    </Link>
+  );
+}
+
 export function DeleteVehicle({ id }: { id: string }) {
-  const deleteInvoiceWithId = deleteVehicle.bind(null, id);
-  console.log('BOATAO PAENR', id)
+  
+  function handleOnClick(){
+    deleteVehicle(id);
+  }
 
   return (
-    <form action={deleteInvoiceWithId}>
-      <button className="rounded-md border p-2 hover:bg-gray-100">
+    
+      <button 
+      className="rounded-md border p-2 hover:bg-gray-100"
+      onClick={handleOnClick}
+      >
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />
       </button>
-    </form>
   );
 }
