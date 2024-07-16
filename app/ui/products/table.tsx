@@ -45,13 +45,7 @@ export default async function ProductsTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Product Name
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Product Code
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Category
+                  Description
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Manufacturer
@@ -60,7 +54,7 @@ export default async function ProductsTable({
                   Price
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Status
+                  Quantity
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -77,19 +71,13 @@ export default async function ProductsTable({
                     {product.product_name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {product.product_code}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {product.category}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
                     {product.manufacturer}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatCurrency(product.price)}
+                    {product.price}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <ProductStatus status={product.status} />
+                    {product.stock}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
