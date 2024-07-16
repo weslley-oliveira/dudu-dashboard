@@ -195,7 +195,8 @@ function toLowerCaseString(str: string) {
 export const fetchVehicleData = async (vehicleId: string) => {
   const response = await fetch(`/api/get-vehicle-data?vehicleId=${vehicleId}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch vehicle data');
+    const errorData = await response.json();
+    throw new Error(`Error fetching vehicle data: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
   }
   return response.json();
 };
