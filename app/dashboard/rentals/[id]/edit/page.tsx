@@ -1,7 +1,7 @@
 import Form from '@/app/ui/rentals/edit-form';
 import Breadcrumbs from '@/app/ui/rentals/breadcrumbs';
 import { fetchRentalById } from '@/app/lib/rentals/data';
-import { fetchVehicles } from '@/app/lib/vehicles/data';
+import { fetchVehicles, fetchVehiclesStatus } from '@/app/lib/vehicles/data';
 import { fetchCustomers } from '@/app/lib/customers/data';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
@@ -19,7 +19,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
 
   const customers = await fetchCustomers();
-  const vehicles = await fetchVehicles();
+  const vehicles = await fetchVehiclesStatus();
 
   return (
     <main>

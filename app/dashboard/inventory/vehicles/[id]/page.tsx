@@ -21,7 +21,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   // Fetch vehicle data using the registration property
   const vehicleData = await fetchVehicleDataToSee(vehicle.registration)
 
-
   // if (!vehicle) {
   //   notFound();
   // }

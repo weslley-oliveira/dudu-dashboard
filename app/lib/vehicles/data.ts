@@ -181,6 +181,52 @@ export async function fetchVehicles(): Promise<Vehicle[]> {
     throw new Error('Failed to fetch vehicles.');
   }
 }
+
+export async function fetchVehiclesStatus(): Promise<Vehicle[]> {
+  noStore();
+  try {
+    const data = await sql<Vehicle>`
+      SELECT
+        id,
+        plate as registration,
+        make,
+        type,
+        series,
+        mileage,
+        observations,
+        model,
+        engine_capacity,
+        power,
+        transmission,
+        vin,
+        engine_number,
+        fuel_type,
+        status,
+        company_id,
+        year_of_manufacture,
+        year_registration,
+        mot,
+        tracker,
+        tracker_observation,
+        sale_price,
+        rental_price,
+        document_status,
+        insurance_status,
+        maintenance_status,
+        color,
+        created_at,
+        updated_at
+      FROM vehicles
+      WHERE status = 'available' -- Filtro para carregar apenas veículos com status "available"
+      ORDER BY created_at DESC
+    `;
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch vehicles.');
+  }
+}
  
 function toLowerCaseString(str: string) {
   // Verifica se a entrada é uma string

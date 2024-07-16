@@ -19,8 +19,8 @@ const FormSchema = z.object({
   power: z.string().optional(),
   mileage: z.number().nonnegative({ message: 'Mileage must be a non-negative number' }).optional(),
   transmission: z.string().optional(),
-  fuel_type: z.string().min(1, { message: 'Fuel Type is required' }),
-  color: z.string().min(1, { message: 'Color is required' }),
+  fuel_type: z.string().optional(),
+  color: z.string().optional(),
   vin: z.string().optional(),
   engine_number: z.string().optional(),
   status: z.string().min(1, { message: 'Status is required' }),
@@ -80,7 +80,6 @@ export type State = {
 
 export async function createVehicle(prevState: State, formData: FormData) {
 
-  console.log("Tesstete",formData)
   // Validate form fields using Zod
   const validatedFields = CreateVehicle.safeParse({
     plate: formData.get('plate'),
@@ -152,12 +151,16 @@ export async function createVehicle(prevState: State, formData: FormData) {
   } = validatedFields.data;
 
   // Insert data into the database
+
+  const teste = tracker_observation
+
+
   try {
     await sql`
       INSERT INTO vehicles (
         plate, make, model, series, type, year_of_manufacture, year_registration, engine_capacity, power, mileage, transmission, fuel_type, color, vin, engine_number, status, purchase_price, sale_price, rental_price, document_status, insurance_status, maintenance_status, mot, tracker, tracker_observation, observations, company_id
       ) VALUES (
-        ${toUpperCase(plate)}, ${make}, ${model}, ${series}, ${type}, ${year_of_manufacture}, ${year_registration}, ${engineSize}, ${power}, ${mileage}, ${transmission}, ${fuel_type}, ${color}, ${vin}, ${engine_number}, ${status},${Number(purchase_price)}, ${sale_price}, ${rental_price}, ${document_status}, ${insurance_status}, ${maintenance_status}, ${mot}, ${tracker}, ${tracker_observation}, ${observations}, ${company_id}
+        ${toUpperCase(plate)}, ${make}, ${model}, ${series}, ${type}, ${year_of_manufacture}, ${year_registration}, ${engineSize}, ${power}, ${mileage}, ${transmission}, ${fuel_type}, ${color}, ${vin}, ${engine_number}, ${status},${Number(purchase_price)}, ${sale_price}, ${rental_price}, ${document_status}, ${insurance_status}, ${maintenance_status}, ${mot}, ${tracker}, ${teste}, ${observations}, ${company_id}
       )
     `;
   } catch (error) {
@@ -174,13 +177,13 @@ export async function createVehicle(prevState: State, formData: FormData) {
 }
 
 export async function updateVehicle(id: string, prevState: State, formData: FormData) {
-  const validatedFields = UpdateVehicle.safeParse({
+  const validatedFields = CreateVehicle.safeParse({
     plate: formData.get('plate'),
     make: formData.get('make'),
     model: formData.get('model'),
     series: formData.get('series'),
     type: formData.get('type'),
-    year_of_manufacture: formData.get('year_of_manufacture') ? Number(formData.get('year_of_manufacture')) : undefined,
+    year_of_manufacture: Number(formData.get('year_of_manufacture')),
     year_registration: formData.get('year_registration'),
     engineSize: formData.get('engineSize'),
     power: formData.get('power'),

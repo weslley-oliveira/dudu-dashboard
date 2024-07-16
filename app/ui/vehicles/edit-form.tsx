@@ -92,15 +92,16 @@ export default function EditVehicleForm({
       <input type="hidden" name="color" value={vehicle.primaryColour|| ''} />
       <input type="hidden" name="vin" value={vehicle.vin} />
       <input type="hidden" name="engine_number" value={vehicle.engine_number} />
+      <input type="hidden" name="maintenance_status" value={''} />
 
       {/* Editable Fields */}
       <TextInput
         id="mileage"
         name="mileage"
-        label="Mileage"
+        label="Mileage" 
         type="number"
         placeholder="Enter mileage"
-        value={String(vehicle.mileage || 0)}
+        value={String(vehicle.mileage)}
         error={state.errors?.mileage?.[0]}
       />
 

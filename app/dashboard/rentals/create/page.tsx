@@ -1,5 +1,5 @@
 import { fetchCustomers } from '@/app/lib/customers/data';
-import { fetchVehicles } from '@/app/lib/vehicles/data';
+import { fetchVehicles, fetchVehiclesStatus } from '@/app/lib/vehicles/data';
 import Form from '@/app/ui/rentals/create-form';
 import Breadcrumbs from '@/app/ui/rentals/breadcrumbs';
 import { Metadata } from 'next';
@@ -10,7 +10,7 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const customers = await fetchCustomers();
-  const vehicles = await fetchVehicles();
+  const vehicles = await fetchVehiclesStatus();
 
   return (
     <main>

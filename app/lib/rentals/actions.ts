@@ -4,20 +4,21 @@ import { z } from 'zod';
 import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
+import { fetchRentalById } from './data';
 
 const RentalSchema = z.object({
   id: z.string().uuid(),
   customerId: z.string().uuid(),
   vehicleId: z.string().uuid(),
   startDate: z.string().min(1, { message: 'Start date is required.' }),
-  endDate: z.string().min(1, { message: 'End date is required.' }),
+  endDate: z.string().optional(),
   total: z.number().positive(),
   daypayment: z.string().optional(),
   createdAt: z.string(),
 });
 
 const CreateRental = RentalSchema.omit({ id: true, createdAt: true });
-const UpdateRental = RentalSchema.omit({ createdAt: true });
+const UpdateRental = RentalSchema.omit({ id: true, createdAt: true });
 
 // This is temporary
 export type State = {
@@ -55,6 +56,10 @@ export async function createRental(prevState: State, formData: FormData) {
   } = validatedFields.data;
   const createdAt = new Date().toISOString();
 
+  // Convert startDate and endDate to timestamps
+  const startDateTimestamp = new Date(startDate).toISOString();
+  const endDateTimestamp = endDate ? new Date(endDate).toISOString() : null;
+
   // Insert data into the database
   try {
     await sql`
@@ -62,7 +67,7 @@ export async function createRental(prevState: State, formData: FormData) {
         customer_id, vehicle_id, start_date, end_date, total, daypayment, created_at
       )
       VALUES (
-        ${customerId}, ${vehicleId}, ${startDate}, ${endDate}, ${total}, ${daypayment}, ${createdAt}
+        ${customerId}, ${vehicleId}, ${startDateTimestamp}, ${endDateTimestamp}, ${total}, ${daypayment}, ${createdAt}
       )
     `;
   } catch (error) {
@@ -70,6 +75,21 @@ export async function createRental(prevState: State, formData: FormData) {
     console.error('Database Error:', error);
     return {
       message: 'Database Error: Failed to Create Rental.',
+    };
+  }
+
+  try {
+    await sql`
+      UPDATE vehicles
+      SET status = 'rented'
+      WHERE id = ${vehicleId};
+    `;
+  } catch (error) {
+    // If a database error occurs, return a more specific error.
+    console.error('ID DO VEICULO:', vehicleId);
+    console.error('Database Error:', error);
+    return {
+      message: 'Database Error: Failed to Update Vehicle.',
     };
   }
 
@@ -93,7 +113,8 @@ export async function updateRental(
   });
 
   if (!validatedFields.success) {
-    
+
+    console.log('teste   dsdws', validatedFields.error.flatten().fieldErrors,)
     return {
       errors: validatedFields.error.flatten().fieldErrors,
       message: 'Missing Fields. Failed to Update Rental.',
@@ -103,14 +124,17 @@ export async function updateRental(
   const {
     customerId, vehicleId, startDate, endDate, total, daypayment
   } = validatedFields.data;
-  const updatedAt = new Date().toISOString();
+
+  // Convert startDate and endDate to timestamps
+  const startDateTimestamp = new Date(startDate).toISOString();
+  const endDateTimestamp = endDate ? new Date(endDate).toISOString() : null;
 
   try {
     await sql`
       UPDATE rentals
       SET 
-        customer_id = ${customerId}, vehicle_id = ${vehicleId}, start_date = ${startDate}, 
-        end_date = ${endDate}, total = ${total}, daypayment = ${daypayment}, updated_at = ${updatedAt}
+        customer_id = ${customerId}, vehicle_id = ${vehicleId}, start_date = ${startDateTimestamp}, 
+        end_date = ${endDateTimestamp}, total = ${total}, daypayment = ${daypayment}
       WHERE id = ${id}
     `;
   } catch (error) {
@@ -123,8 +147,29 @@ export async function updateRental(
 }
 
 export async function deleteRental(id: string) {
+  // Fetch the rental by id to get the vehicle_id
+  const rental = await fetchRentalById(id);
+
+  if (!rental || !rental.vehicleId) {
+    console.error('Rental not found or vehicle_id is missing');
+    return { message: 'Rental not found or vehicle_id is missing' };
+  }
+
+  const { vehicleId } = rental;
+  console.log(vehicleId);
+
   try {
+    // Delete the rental
     await sql`DELETE FROM rentals WHERE id = ${id}`;
+    
+    // Update the vehicle status to 'available'
+    await sql`
+      UPDATE vehicles
+      SET status = 'available'
+      WHERE id = ${vehicleId};
+    `;
+    
+    // Revalidate the cache and return a success message
     revalidatePath('/dashboard/rentals');
     return { message: 'Deleted Rental' };
   } catch (error) {

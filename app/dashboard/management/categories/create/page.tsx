@@ -11,7 +11,7 @@ export default function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Categories', href: '/dashboard/categories' },
+          { label: 'Categories', href: '/dashboard/management/categories' },
           {
             label: 'Create Category',
             href: '/dashboard/categories/create',
