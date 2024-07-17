@@ -96,7 +96,7 @@ export const formatCurrencyGb = (value: number): string => {
   return new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'GBP' }).format(value);
 };
 
-export function formatDateToInput(dateStr: string): string {
+export const formatDateToInput = (dateStr: string) =>{
   const date = new Date(dateStr);
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
