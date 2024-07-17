@@ -240,16 +240,23 @@ function toLowerCaseString(str: string) {
 
 export const fetchVehicleData = async (vehicleId: string) => {
   const response = await fetch(`/api/get-vehicle-data?vehicleId=${vehicleId}`);
+  const data = await response.json();
+  
   if (!response.ok) {
-    throw new Error('Failed to fetch vehicle data');
+    const errorDetails = data.details.errorMessage || '';
+    
+    throw new Error(`${errorDetails}`);
   }
-  return response.json();
+  
+  return data;
 };
+
+
 
 export const fetchVehicleDataToSee = async (vehicleId: string) => {
   const response = await fetch(`${process.env.NEXTAUTH_URL}/api/get-vehicle-data?vehicleId=${vehicleId}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch vehicle data');
+    throw new Error('Failed to fetch vehicle data tes');
   }
   return response.json();
 };
