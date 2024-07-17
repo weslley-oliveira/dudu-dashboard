@@ -2,6 +2,7 @@ import { UpdateRental, DeleteRental } from '@/app/ui/rentals/buttons';
 import { fetchFilteredRentals } from '@/app/lib/rentals/data';
 import { fetchCustomerById } from '@/app/lib/customers/data';
 import { fetchVehicleById } from '@/app/lib/vehicles/data';
+import { formatCurrencyGb, formatDateToLocal } from '@/app/lib/utils';
 
 
 // Componente assíncrono para renderizar o nome do cliente
@@ -49,13 +50,14 @@ export default async function RentalsTable({
                     </div>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">{rental.total}</p>
+                    <p className="text-sm text-gray-500">{formatCurrencyGb(rental.total)}</p>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p>{rental.startDate.toISOString()}</p>
-                    <p>{rental.endDate.toISOString()}</p>
+                    <p>{rental.endDate ? rental.endDate.toISOString() : "No end date available"}</p>
+
                   </div>
                   <div className="flex justify-end gap-2">
                     <UpdateRental id={rental.id} />
@@ -101,13 +103,13 @@ export default async function RentalsTable({
                     <VehicleName vehicleId={rental.vehicleId} />
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {new Date(rental.startDate).toISOString()}
+                    {formatDateToLocal(rental.startDate.toISOString())}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {new Date(rental.endDate).toISOString()}
+                  <p>{rental.endDate ? formatDateToLocal(rental.endDate.toISOString()) : "No date"}</p>
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {rental.total}
+                    {formatCurrencyGb(rental.total)}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">

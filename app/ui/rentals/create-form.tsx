@@ -1,7 +1,8 @@
 'use client';
 
+import { useState } from 'react';
 import { CustomerField } from '@/app/lib/customers/definitions';
-import { VehicleField } from '@/app/lib/vehicles/definitions';
+import { Vehicle } from '@/app/lib/vehicles/definitions';
 import Link from 'next/link';
 import {
   CalendarIcon,
@@ -13,9 +14,22 @@ import { Button } from '@/app/ui/button';
 import { createRental } from '@/app/lib/rentals/actions';
 import { useFormState } from 'react-dom';
 
-export default function Form({ customers, vehicles }: { customers: CustomerField[], vehicles: VehicleField[] }) {
+export default function Form({ customers, vehicles }: { customers: CustomerField[], vehicles: Vehicle[] }) {
   const initialState = { message: '', errors: {} };
   const [state, dispatch] = useFormState(createRental, initialState);
+  const [selectedVehicle, setSelectedVehicle] = useState<Vehicle | null>(null);
+  const [total, setTotal] = useState<number | string>('');
+
+  const handleVehicleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const vehicleId = event.target.value;
+    const vehicle = vehicles.find(v => v.id === vehicleId) || null;
+    setSelectedVehicle(vehicle);
+    setTotal(vehicle?.rental_price || '');
+  };
+
+  const handleTotalChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTotal(event.target.value);
+  };
 
   return (
     <form action={dispatch}>
@@ -67,13 +81,14 @@ export default function Form({ customers, vehicles }: { customers: CustomerField
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
               aria-describedby="vehicle-error"
+              onChange={handleVehicleChange}
             >
               <option value="" disabled>
                 Select a vehicle
               </option>
               {vehicles.map((vehicle) => (
                 <option key={vehicle.id} value={vehicle.id}>
-                  {vehicle.make} {vehicle.model} ({vehicle.plate})
+                  {vehicle.registration} - {vehicle.make} {vehicle.model}
                 </option>
               ))}
             </select>
@@ -116,7 +131,7 @@ export default function Form({ customers, vehicles }: { customers: CustomerField
           </div>
         </div>
 
-        {/* end date DAY */}
+        {/* End Date */}
         <div className="mb-4">
           <label htmlFor="endDate" className="mb-2 block text-sm font-medium">
             End Date
@@ -142,20 +157,30 @@ export default function Form({ customers, vehicles }: { customers: CustomerField
           </div>
         </div>
 
-
-        {/* Day payment */}
+        {/* Day Payment */}
         <div className="mb-4">
           <label htmlFor="daypayment" className="mb-2 block text-sm font-medium">
             Day Payment
           </label>
           <div className="relative">
-            <input
+            <select
               id="daypayment"
               name="daypayment"
-              type="date"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue=""
               aria-describedby="daypayment-error"
-            />
+            >
+              <option value="" disabled>
+                Select a day
+              </option>
+              <option value="sunday">Sunday</option>
+              <option value="monday">Monday</option>
+              <option value="tuesday">Tuesday</option>
+              <option value="wednesday">Wednesday</option>
+              <option value="thursday">Thursday</option>
+              <option value="friday">Friday</option>
+              <option value="saturday">Saturday</option>
+            </select>
             <CalendarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
 
@@ -168,6 +193,7 @@ export default function Form({ customers, vehicles }: { customers: CustomerField
               ))}
           </div>
         </div>
+
         {/* Total Amount */}
         <div className="mb-4">
           <label htmlFor="total" className="mb-2 block text-sm font-medium">
@@ -179,6 +205,8 @@ export default function Form({ customers, vehicles }: { customers: CustomerField
               name="total"
               type="number"
               step="0.01"
+              value={total}
+              onChange={handleTotalChange}
               placeholder="Enter USD amount"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               aria-describedby="total-error"

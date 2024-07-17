@@ -58,6 +58,7 @@ export async function fetchRentalsPages(query: string): Promise<number> {
 
 // Função para buscar um rental pelo ID
 export async function fetchRentalById(id: string): Promise<Rental | null> {
+  noStore();
   try {
     const data = await sql<Rental>`
       SELECT
