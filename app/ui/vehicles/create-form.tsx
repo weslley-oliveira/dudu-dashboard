@@ -19,6 +19,8 @@ export default function Form({ companies }: { companies: CustomerField[] }) {
   const [vehicleData, setVehicleData] = useState<Vehicle | null>(null);
   const [tracker, setTracker] = useState(false);
   const [tracker_observation, setTrackerObservation] = useState('');
+  const [error_message, setErroMessage] = useState('');
+ 
 
   const handlePlateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPlate(e.target.value);
@@ -28,8 +30,15 @@ export default function Form({ companies }: { companies: CustomerField[] }) {
     try {
       const data: Vehicle = await fetchVehicleData(plate);
       setVehicleData(data);
+
+      
     } catch (error) {
-      console.error('Erro ao buscar dados do veículo:', error);
+      console.error('Error fetching vehicle data:', error)
+      if (error instanceof Error) {
+        setErroMessage(error.message)
+      } else {
+        // setError('An unknown error occurred while fetching vehicle data');
+      }
     }
   };
 
@@ -60,6 +69,13 @@ export default function Form({ companies }: { companies: CustomerField[] }) {
             Buscar
           </button>
         </div>
+        <div  id="plate" aria-live="polite" aria-atomic="true">
+        {error_message && (
+          <p className="mt-2 text-sm text-red-500">
+            {error_message}
+          </p>
+        )}
+      </div>
       </div>
 
       {vehicleData && <VehicleCard vehicle={vehicleData} />}

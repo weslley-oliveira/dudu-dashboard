@@ -69,8 +69,8 @@ export async function createCustomer(prevState: State, formData: FormData) {
     console.error('Database Error:', error);
     return { message: 'Failed to create customer due to a database error' };
   }
-  revalidatePath('/dashboard/customers');
-    redirect('/dashboard/customers');
+  revalidatePath('/dashboard/management/customers');
+    redirect('/dashboard/management/customers');
 }
 
 // Função para atualizar um cliente
@@ -103,8 +103,8 @@ export async function updateCustomer(id: string, prevState: State, formData: For
       SET name = ${name}, email = ${email}, phone = ${phone}, address = ${address}, status = ${status}, vehicle_plate = ${vehicle_plate}, description = ${descriptions}, date_of_birth = ${date_of_birth}
       WHERE id = ${id}
     `;
-    revalidatePath('/dashboard/customers');
-    redirect('/dashboard/invoices');
+    revalidatePath('/dashboard/management/customers');
+    redirect('/dashboard/management/customers');
     return { message: 'Customer updated successfully' };
   } catch (error) {
     console.error('Database Error:', error);
@@ -116,7 +116,7 @@ export async function updateCustomer(id: string, prevState: State, formData: For
 export async function deleteCustomer(id: string) {
   try {
     await sql`DELETE FROM customers WHERE id = ${id}`;
-    revalidatePath('/dashboard/customers');
+    revalidatePath('/dashboard/management/customers');
     return { message: 'Deleted Customer' };
   } catch (error) {
     console.error('Database Error:', error);

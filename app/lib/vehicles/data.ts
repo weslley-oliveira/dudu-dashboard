@@ -181,6 +181,52 @@ export async function fetchVehicles(): Promise<Vehicle[]> {
     throw new Error('Failed to fetch vehicles.');
   }
 }
+
+export async function fetchVehiclesStatus(): Promise<Vehicle[]> {
+  noStore();
+  try {
+    const data = await sql<Vehicle>`
+      SELECT
+        id,
+        plate as registration,
+        make,
+        type,
+        series,
+        mileage,
+        observations,
+        model,
+        engine_capacity,
+        power,
+        transmission,
+        vin,
+        engine_number,
+        fuel_type,
+        status,
+        company_id,
+        year_of_manufacture,
+        year_registration,
+        mot,
+        tracker,
+        tracker_observation,
+        sale_price,
+        rental_price,
+        document_status,
+        insurance_status,
+        maintenance_status,
+        color,
+        created_at,
+        updated_at
+      FROM vehicles
+      WHERE status = 'available' -- Filtro para carregar apenas veículos com status "available"
+      ORDER BY created_at DESC
+    `;
+
+    return data.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch vehicles.');
+  }
+}
  
 function toLowerCaseString(str: string) {
   // Verifica se a entrada é uma string
@@ -194,17 +240,28 @@ function toLowerCaseString(str: string) {
 
 export const fetchVehicleData = async (vehicleId: string) => {
   const response = await fetch(`/api/get-vehicle-data?vehicleId=${vehicleId}`);
+  const data = await response.json();
+  
   if (!response.ok) {
+<<<<<<< HEAD
     const errorData = await response.json();
     throw new Error(`Error fetching vehicle data: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
+=======
+    const errorDetails = data.details.errorMessage || '';
+    
+    throw new Error(`${errorDetails}`);
+>>>>>>> dev
   }
-  return response.json();
+  
+  return data;
 };
+
+
 
 export const fetchVehicleDataToSee = async (vehicleId: string) => {
   const response = await fetch(`${process.env.NEXTAUTH_URL}/api/get-vehicle-data?vehicleId=${vehicleId}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch vehicle data');
+    throw new Error('Failed to fetch vehicle data tes');
   }
   return response.json();
 };

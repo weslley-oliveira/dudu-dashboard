@@ -11,7 +11,7 @@ export default function Page() {
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Suppliers', href: '/dashboard/suppliers' },
+          { label: 'Suppliers', href: '/dashboard/management/suppliers' },
           {
             label: 'Create Supplier',
             href: '/dashboard/suppliers/create',
