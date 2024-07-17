@@ -243,14 +243,10 @@ export const fetchVehicleData = async (vehicleId: string) => {
   const data = await response.json();
   
   if (!response.ok) {
-<<<<<<< HEAD
-    const errorData = await response.json();
-    throw new Error(`Error fetching vehicle data: ${response.status} ${response.statusText} - ${JSON.stringify(errorData)}`);
-=======
     const errorDetails = data.details.errorMessage || '';
     
     throw new Error(`${errorDetails}`);
->>>>>>> dev
+
   }
   
   return data;
