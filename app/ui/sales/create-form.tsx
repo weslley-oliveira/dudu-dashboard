@@ -206,7 +206,7 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
         {/* Selected Items */}
         <div className="mt-4">
           <h2 className="text-lg font-medium mb-2">Items Selected</h2>
-          <table className="w-full table-auto border-collapse border border-gray-300 mb-8">
+          <table className="w-full table-auto border-collapse border border-gray-300 mb-8 rounded-sm overflow-hidden">
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-2 text-left border border-gray-300">Item</th>
