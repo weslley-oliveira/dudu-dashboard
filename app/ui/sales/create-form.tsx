@@ -209,9 +209,9 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
             <thead>
               <tr>
                 <th className="px-4 py-2 text-left">Item</th>
-                <th className="px-4 py-2 text-left">Quantity</th>
                 <th className="px-4 py-2 text-left">Price</th>
                 <th className="px-4 py-2 text-left">Needs Installation</th>
+                <th className="px-4 py-2 text-left">Quantity</th>
               </tr>
             </thead>
             <tbody>
@@ -226,6 +226,17 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
                         : item.itemType === 'part' && selectedPart
                         ? `${selectedPart.description} (${selectedPart.brand})`
                         : ''}
+                    </td>
+                    <td className="px-4 py-2">${Number(item.price).toFixed(2)}</td>
+                    <td className="px-4 py-2">
+                      {item.itemType === 'part' && (
+                        <input
+                          type="checkbox"
+                          checked={item.needsInstallation}
+                          onChange={() => toggleInstallation(item.id)}
+                          className="mr-2"
+                        />
+                      )}
                     </td>
                     <td className="px-4 py-2 flex items-center">
                       {item.quantity === 1 ? (
@@ -253,17 +264,6 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
                       >
                         +
                       </button>
-                    </td>
-                    <td className="px-4 py-2">${Number(item.price).toFixed(2)}</td>
-                    <td className="px-4 py-2">
-                      {item.itemType === 'part' && (
-                        <input
-                          type="checkbox"
-                          checked={item.needsInstallation}
-                          onChange={() => toggleInstallation(item.id)}
-                          className="mr-2"
-                        />
-                      )}
                     </td>
                   </tr>
                 );
