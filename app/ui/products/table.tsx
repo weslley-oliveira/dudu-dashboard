@@ -48,19 +48,13 @@ export default async function ProductsTable({
                   Product Name
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Product Code
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Category
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
                   Manufacturer
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
                   Price
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Status
+                  Quantity
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -77,19 +71,13 @@ export default async function ProductsTable({
                     {product.product_name}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {product.product_code}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {product.category}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
                     {product.manufacturer}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {formatCurrency(product.price)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <ProductStatus status={product.status} />
+                    {product.stock}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
