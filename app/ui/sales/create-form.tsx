@@ -1,15 +1,13 @@
 'use client';
 
 import { CustomerField } from '@/app/lib/customers/definitions';
-import { VehicleField } from '@/app/lib/vehicles/definitions';
+import { Vehicle } from '@/app/lib/vehicles/definitions';
 import { PartField } from '@/app/lib/parts/definitions';
 import Link from 'next/link';
 import { useState } from 'react';
 import {
-  CurrencyDollarIcon,
   UserCircleIcon,
   TruckIcon,
-  CogIcon, // Icon for parts
   PlusIcon,
   TrashIcon,
 } from '@heroicons/react/24/outline';
@@ -17,34 +15,19 @@ import { Button } from '@/app/ui/button';
 import { createSale } from '@/app/lib/sales/actions';
 import { useFormState } from 'react-dom';
 
-export default function Form({ customers, vehicles, parts }: { customers: CustomerField[], vehicles: VehicleField[], parts: PartField[] }) {
+export default function Form({ customers, vehicles, parts }: { customers: CustomerField[], vehicles: Vehicle[], parts: PartField[] }) {
   const initialState = { message: '', errors: {} };
   const [state, dispatch] = useFormState(createSale, initialState);
-  const [items, setItems] = useState<{ id: number; itemId: string; itemType: string; quantity: number; price: number }[]>([]);
-  const [selectedItem, setSelectedItem] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState(0);
+  const [selectedCustomer, setSelectedCustomer] = useState('');
+  const [selectedVehicle, setSelectedVehicle] = useState('');
+  const [items, setItems] = useState<{ id: number; itemId: string; itemType: string; quantity: number; price: number; needsInstallation: boolean }[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const [total, setTotal] = useState(0);
 
-  const addItem = () => {
-    if (!selectedItem || quantity <= 0 || price <= 0) return;
-
-    const selectedVehicle = vehicles.find(vehicle => vehicle.id === selectedItem);
-    const selectedPart = parts.find(part => part.id === selectedItem);
-
-    const newItem = {
-      id: Date.now(),
-      itemId: selectedItem,
-      itemType: selectedVehicle ? 'vehicle' : 'part',
-      quantity,
-      price,
-    };
-
-    setItems([...items, newItem]);
-    setTotal(total + price * quantity);
-    setSelectedItem('');
-    setQuantity(1);
-    setPrice(0);
+  const addItem = (item: { id: number; itemId: string; itemType: string; quantity: number; price: number; needsInstallation: boolean }) => {
+    setItems([...items, item]);
+    setTotal(total + item.price * item.quantity);
+    setSearchTerm(''); // Clear search term when item is added
   };
 
   const removeItem = (id: number) => {
@@ -55,24 +38,19 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
     }
   };
 
-  const handleItemSelection = (value: any) => {
-    console.log('Selected item ID:', value);
-    setSelectedItem(value);
+  const toggleInstallation = (id: number) => {
+    setItems(items.map(item =>
+      item.id === id ? { ...item, needsInstallation: !item.needsInstallation } : item
+    ));
+  };
 
-    const selectedVehicle = vehicles.find(vehicle => vehicle.id === value);
-    const selectedPart = parts.find(part => part.id === value);
-
-    console.log('selectedVehicle:', selectedVehicle);
-    console.log('selectedPart:', selectedPart);
-
-    if (selectedVehicle) {
-      console.log('Selected vehicle:', selectedVehicle);
-      setPrice(selectedVehicle.sale_price); // Assume vehicles have a sale_price field
-    } else if (selectedPart) {
-      console.log('Selected part:', selectedPart);
-      setPrice(selectedPart.sale_price); // Assume parts have a sale_price field
-    } else {
-      setPrice(0);
+  const updateQuantity = (id: number, delta: number) => {
+    setItems(items => items.map(item =>
+      item.id === id ? { ...item, quantity: item.quantity + delta } : item
+    ).filter(item => item.quantity > 0));
+    const item = items.find(item => item.id === id);
+    if (item) {
+      setTotal(total + item.price * delta);
     }
   };
 
@@ -85,10 +63,22 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
     }
 
     const formData = new FormData(e.target);
-    formData.set('total', total.toString()); // Ensure total is sent as a string
+    formData.set('total', total.toString());
 
     dispatch(formData);
   };
+
+  // Filtro para peças e veículos baseados no termo de pesquisa
+  const filteredParts = parts.filter(part =>
+    part.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    part.brand.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredVehicles = vehicles.filter(vehicle =>
+    vehicle.registration.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    vehicle.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    vehicle.model.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   return (
     <form onSubmit={handleSubmit}>
@@ -103,7 +93,8 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
               id="customer"
               name="customerId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              defaultValue=""
+              value={selectedCustomer}
+              onChange={(e) => setSelectedCustomer(e.target.value)}
               aria-describedby="customer-error"
             >
               <option value="" disabled>
@@ -128,72 +119,157 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
           </div>
         </div>
 
-        {/* Item Selection */}
+        {/* Vehicle Selection */}
         <div className="mb-4">
-          <label htmlFor="item" className="mb-2 block text-sm font-medium">
-            Choose item
+          <label htmlFor="vehicle" className="mb-2 block text-sm font-medium">
+            Choose vehicle
           </label>
-          <div className="relative flex items-center gap-2">
+          <div className="relative">
             <select
-              id="item"
-              name="itemId"
+              id="vehicle"
+              name="vehicleId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              value={selectedItem}
-              onChange={(e) => handleItemSelection(e.target.value)}
+              value={selectedVehicle}
+              onChange={(e) => setSelectedVehicle(e.target.value)}
+              aria-describedby="vehicle-error"
             >
               <option value="" disabled>
-                Select an item
+                Select a vehicle
               </option>
               {vehicles.map((vehicle) => (
                 <option key={vehicle.id} value={vehicle.id}>
-                  {vehicle.make} {vehicle.model} ({vehicle.plate})
-                </option>
-              ))}
-              {parts.map((part) => (
-                <option key={part.id} value={part.id}>
-                  {part.description} ({part.brand})
+                  {vehicle.registration} - {vehicle.make} {vehicle.model}
                 </option>
               ))}
             </select>
-            <input
-              type="number"
-              name="quantity"
-              className="peer block w-24 cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              placeholder="Quantity"
-              value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value))}
-            />
-            <input
-              type="number"
-              name="price"
-              className="peer block w-24 cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
-              placeholder="Price"
-              value={price}
-              readOnly
-            />
-            <PlusIcon className="h-5 w-5 cursor-pointer text-blue-600" onClick={addItem} />
+            <TruckIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          </div>
+
+          <div id="vehicle-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.vehicleId &&
+              state.errors.vehicleId.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
           </div>
         </div>
+
+        {/* Product Search */}
+        <div className="mb-4">
+          <label htmlFor="search" className="mb-2 block text-sm font-medium">
+            Search parts or vehicles
+          </label>
+          <input
+            id="search"
+            type="text"
+            className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 text-sm outline-2 placeholder:text-gray-500"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        {/* Search Results */}
+        {searchTerm.length >= 2 && (
+          <div className="mb-4">
+            <h2 className="text-lg font-medium">Search Results</h2>
+            <div className="space-y-2">
+              {filteredVehicles.map((vehicle) => (
+                <div key={vehicle.id} className="flex items-center justify-between">
+                  <span>{`${vehicle.registration} - ${vehicle.make} ${vehicle.model}`}</span>
+                  <button
+                    type="button"
+                    onClick={() => addItem({ id: Date.now(), itemId: vehicle.id, itemType: 'vehicle', quantity: 1, price: Number(vehicle.sale_price), needsInstallation: false })}
+                    className="flex items-center px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                  </button>
+                </div>
+              ))}
+              {filteredParts.map((part) => (
+                <div key={part.id} className="flex items-center justify-between">
+                  <span>{`${part.description} (${part.brand})`}</span>
+                  <button
+                    type="button"
+                    onClick={() => addItem({ id: Date.now(), itemId: part.id, itemType: 'part', quantity: 1, price: Number(part.sale_price), needsInstallation: false })}
+                    className="flex items-center px-2 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  >
+                    <PlusIcon className="h-5 w-5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Selected Items */}
         <div className="mt-4">
           <h2 className="text-lg font-medium">Items Selected</h2>
-          <ul className="list-disc pl-5">
-            {items.map((item, index) => {
-              const selectedVehicle = vehicles.find(vehicle => vehicle.id === item.itemId);
-              const selectedPart = parts.find(part => part.id === item.itemId);
-              return (
-                <li key={index} className="mt-2 flex items-center justify-between">
-                  {item.itemType === 'vehicle' && selectedVehicle
-                    ? `${selectedVehicle.make} ${selectedVehicle.model} (${selectedVehicle.plate}) - Quantity: ${item.quantity} - Price: $${item.price}`
-                    : item.itemType === 'part' && selectedPart
-                    ? `${selectedPart.description} (${selectedPart.brand}) - Quantity: ${item.quantity} - Price: $${item.price}`
-                    : ''}
-                  <TrashIcon className="h-5 w-5 cursor-pointer text-red-500" onClick={() => removeItem(item.id)} />
-                </li>
-              );
-            })}
-          </ul>
+          <table className="w-full table-auto">
+            <thead>
+              <tr>
+                <th className="px-4 py-2">Item</th>
+                <th className="px-4 py-2">Quantity</th>
+                <th className="px-4 py-2">Price</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((item, index) => {
+                const selectedVehicle = vehicles.find(vehicle => vehicle.id === item.itemId);
+                const selectedPart = parts.find(part => part.id === item.itemId);
+                return (
+                  <tr key={index} className="border-b">
+                    <td className="px-4 py-2">
+                      {item.itemType === 'vehicle' && selectedVehicle
+                        ? `${selectedVehicle.make} ${selectedVehicle.model} (${selectedVehicle.registration})`
+                        : item.itemType === 'part' && selectedPart
+                        ? `${selectedPart.description} (${selectedPart.brand})`
+                        : ''}
+                      {item.itemType === 'part' && (
+                        <div className="ml-8 mt-2 flex items-center text-sm text-gray-500">
+                          <input
+                            type="checkbox"
+                            checked={item.needsInstallation}
+                            onChange={() => toggleInstallation(item.id)}
+                            className="mr-2"
+                          />
+                          Needs installation
+                        </div>
+                      )}
+                    </td>
+                    <td className="px-4 py-2 flex items-center">
+                      {item.quantity === 1 ? (
+                        <button
+                          type="button"
+                          onClick={() => removeItem(item.id)}
+                          className="px-2 py-1 bg-red-500 text-white rounded"
+                        >
+                          <TrashIcon className="h-5 w-5" />
+                        </button>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => updateQuantity(item.id, -1)}
+                          className="px-2 py-1 bg-gray-200 rounded"
+                        >
+                          -
+                        </button>
+                      )}
+                      <span className="mx-2">{item.quantity}</span>
+                      <button
+                        type="button"
+                        onClick={() => updateQuantity(item.id, 1)}
+                        className="px-2 py-1 bg-gray-200 rounded"
+                      >
+                        +
+                      </button>
+                    </td>
+                    <td className="px-4 py-2">${Number(item.price).toFixed(2)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
 
         {/* Total Amount */}
