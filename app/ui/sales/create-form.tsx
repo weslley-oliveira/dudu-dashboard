@@ -275,7 +275,7 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
         {/* Total Amount */}
         <div className="mb-4 mt-4">
           <label htmlFor="total" className="mb-2 block text-sm font-medium">
-            Total Amount: ${total.toFixed(2)}
+            Total Amount: £{total.toFixed(2)}
           </label>
         </div>
 
