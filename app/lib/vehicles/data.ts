@@ -143,7 +143,7 @@ export async function fetchVehicles(): Promise<Vehicle[]> {
     const data = await sql<Vehicle>`
       SELECT
         id,
-        plate,
+        plate as registration,
         make,
         type,
         series,

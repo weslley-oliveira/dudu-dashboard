@@ -24,7 +24,7 @@ export default async function Page() {
             href: '/dashboard/sales/create',
             active: true,
           },
-        ]}
+        ]} 
       />
       <Form customers={customers} vehicles={vehicles} parts={parts} />
     </main>
