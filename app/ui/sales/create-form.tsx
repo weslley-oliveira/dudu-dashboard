@@ -5,6 +5,7 @@ import { Vehicle } from '@/app/lib/vehicles/definitions';
 import { PartField } from '@/app/lib/parts/definitions';
 import Link from 'next/link';
 import { useState } from 'react';
+import { formatCurrencyGb } from '@/app/lib/utils';
 import {
   UserCircleIcon,
   TruckIcon,
@@ -227,7 +228,7 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
                         ? `${selectedPart.description} (${selectedPart.brand})`
                         : ''}
                     </td>
-                    <td className="px-4 py-2">£{Number(item.price).toFixed(2)}</td>
+                    <td className="px-4 py-2">{formatCurrencyGb(item.price)}</td>
                     <td className="px-4 py-2">
                       {item.itemType === 'part' && (
                         <input
@@ -275,7 +276,7 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
         {/* Total Amount */}
         <div className="mb-4 mt-4">
           <label htmlFor="total" className="mb-2 block text-sm font-medium">
-            Total Amount: £{total.toFixed(2)}
+            Total Amount: {formatCurrencyGb(total)}
           </label>
         </div>
 
