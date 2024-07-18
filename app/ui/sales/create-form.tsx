@@ -208,9 +208,9 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
           <table className="w-full table-auto">
             <thead>
               <tr>
-                <th className="px-4 py-2">Item</th>
-                <th className="px-4 py-2">Quantity</th>
-                <th className="px-4 py-2">Price</th>
+                <th className="px-4 py-2 text-left">Item</th>
+                <th className="px-4 py-2 text-left">Quantity</th>
+                <th className="px-4 py-2 text-left">Price</th>
               </tr>
             </thead>
             <tbody>
