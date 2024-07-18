@@ -205,14 +205,14 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
 
         {/* Selected Items */}
         <div className="mt-4">
-          <h2 className="text-lg font-medium">Items Selected</h2>
-          <table className="w-full table-auto">
-            <thead>
+          <h2 className="text-lg font-medium mb-2">Items Selected</h2>
+          <table className="w-full table-auto border-collapse border border-gray-300 mb-8">
+            <thead className="bg-gray-100">
               <tr>
-                <th className="px-4 py-2 text-left">Item</th>
-                <th className="px-4 py-2 text-left">Price</th>
-                <th className="px-4 py-2 text-left">Needs Installation</th>
-                <th className="px-4 py-2 text-left">Quantity</th>
+                <th className="px-4 py-2 text-left border border-gray-300">Item</th>
+                <th className="px-4 py-2 text-left border border-gray-300">Price</th>
+                <th className="px-4 py-2 text-left border border-gray-300">Needs Installation</th>
+                <th className="px-4 py-2 text-left border border-gray-300">Quantity</th>
               </tr>
             </thead>
             <tbody>
@@ -220,16 +220,16 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
                 const selectedVehicle = vehicles.find(vehicle => vehicle.id === item.itemId);
                 const selectedPart = parts.find(part => part.id === item.itemId);
                 return (
-                  <tr key={index} className="border-b">
-                    <td className="px-4 py-2">
+                  <tr key={index} className="border-b hover:bg-gray-50">
+                    <td className="px-4 py-2 border border-gray-300">
                       {item.itemType === 'vehicle' && selectedVehicle
                         ? `${selectedVehicle.make} ${selectedVehicle.model} (${selectedVehicle.registration})`
                         : item.itemType === 'part' && selectedPart
                         ? `${selectedPart.description} (${selectedPart.brand})`
                         : ''}
                     </td>
-                    <td className="px-4 py-2">{formatCurrencyGb(item.price)}</td>
-                    <td className="px-4 py-2">
+                    <td className="px-4 py-2 border border-gray-300">{formatCurrencyGb(item.price)}</td>
+                    <td className="px-4 py-2 border border-gray-300">
                       {item.itemType === 'part' && (
                         <input
                           type="checkbox"
@@ -239,7 +239,7 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
                         />
                       )}
                     </td>
-                    <td className="px-4 py-2 flex items-center">
+                    <td className="px-4 py-2 border border-gray-300 flex items-center">
                       {item.quantity === 1 ? (
                         <button
                           type="button"
