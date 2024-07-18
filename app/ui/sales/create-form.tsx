@@ -274,8 +274,8 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
         </div>
 
         {/* Total Amount */}
-        <div className="mb-4 mt-4">
-          <label htmlFor="total" className="mb-2 block text-sm font-medium">
+        <div className="mb-4 mt-4 text-right">
+          <label htmlFor="total" className="mb-2 block text-2xl font-bold">
             Total Amount: {formatCurrencyGb(total)}
           </label>
         </div>
