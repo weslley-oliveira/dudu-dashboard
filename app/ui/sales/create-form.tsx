@@ -227,7 +227,7 @@ export default function Form({ customers, vehicles, parts }: { customers: Custom
                         ? `${selectedPart.description} (${selectedPart.brand})`
                         : ''}
                     </td>
-                    <td className="px-4 py-2">${Number(item.price).toFixed(2)}</td>
+                    <td className="px-4 py-2">£{Number(item.price).toFixed(2)}</td>
                     <td className="px-4 py-2">
                       {item.itemType === 'part' && (
                         <input
