@@ -3,6 +3,11 @@ import { fetchFilteredVehicles } from '@/app/lib/vehicles/data';
 import { Vehicle } from '@/app/lib/vehicles/definitions';
 import { checkExpiryDate } from '@/app/lib/utils';
 
+function getMotStatusClass(expiryDate: string) {
+  const status = checkExpiryDate(expiryDate);
+  return status === 'expired' ? 'text-red-500' : 'text-green-500';
+}
+
 export default async function VehiclesTable({
   query,
   currentPage,
@@ -86,8 +91,8 @@ export default async function VehiclesTable({
                   <td className="whitespace-nowrap px-3 py-3">
                     {vehicle.model}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {vehicle.mot || 'N/A'}
+                  <td className={`whitespace-nowrap px-3 py-3 ${getMotStatusClass(vehicle.mot)}`}>
+                    {checkExpiryDate(vehicle.mot)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
                     {vehicle.status}
