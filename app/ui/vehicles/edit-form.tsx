@@ -240,7 +240,7 @@ export default function EditVehicleForm({
       {/* Company */}
       <div className="mb-4">
         <label htmlFor="company_id" className="mb-2 block text-sm font-medium">
-          Company
+          Company's Unit
         </label>
         <select
           id="company_id"
