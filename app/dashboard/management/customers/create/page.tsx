@@ -16,7 +16,7 @@ export default function Page() {
            },
           {
             label: 'Create Customer',
-            href: '/dashboard/customers/create',
+            href: '/dashboard/management/customers/create',
             active: true,
           },
         ]}

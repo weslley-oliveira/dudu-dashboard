@@ -14,7 +14,7 @@ export default async function Page() {
           { label: 'Companies', href: '/dashboard/management/companies' },
           {
             label: 'Create Company',
-            href: '/dashboard/companies/create',
+            href: '/dashboard/management/companies/create',
             active: true,
           },
         ]}

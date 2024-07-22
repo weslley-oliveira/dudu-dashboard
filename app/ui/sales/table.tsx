@@ -1,41 +1,52 @@
-import { UpdateProduct, DeleteProduct } from '@/app/ui/products/buttons';
-import ProductStatus from '@/app/ui/products/status';
-import { formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredProducts } from '@/app/lib/products/data';
+import { UpdateSale, DeleteSale } from '@/app/ui/sales/buttons';
+import { fetchFilteredSales } from '@/app/lib/sales/data';
+import { fetchCustomerById } from '@/app/lib/customers/data';
 
-export default async function ProductsTable({
+// Asynchronous component to render the customer name
+async function CustomerName({ customerId }: { customerId: string }) {
+  const customer = await fetchCustomerById(customerId);
+  return <span>{customer ? customer.name : 'Customer not found'}</span>;
+}
+
+export default async function SalesTable({
   query,
   currentPage,
 }: {
   query: string;
   currentPage: number;
 }) {
-  const products = await fetchFilteredProducts(query, currentPage);
+  const sales = await fetchFilteredSales(query, currentPage);
 
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
-            {products?.map((product) => (
+            {sales?.map((sale) => (
               <div
-                key={product.id}
+                key={sale.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
                 <div className="flex items-center justify-between border-b pb-4">
                   <div>
-                    <p className="text-xl font-medium">{product.product_name}</p>
-                    <p className="text-sm text-gray-500">{product.product_code}</p>
-                    <p className="text-sm text-gray-500">{product.category}</p>
-                    <p className="text-sm text-gray-500">{product.manufacturer}</p>
+                    <div className="mb-2 flex items-center">
+                      <CustomerName customerId={sale.customerId} />
+                    </div>
+                    <div className="mb-2 flex items-center">
+                      <p className="text-sm text-gray-500">Sale Code: {sale.saleCode}</p>
+                    </div>
+                    <div className="mb-2 flex items-center">
+                      <p className="text-sm text-gray-500">Status: {sale.status}</p>
+                    </div>
                   </div>
-                  <ProductStatus status={product.status} />
+                  <div>
+                    <p className="text-sm text-gray-500">Total: {sale.total}</p>
+                  </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
-                  <p className="text-xl font-medium">{formatCurrency(product.price)}</p>
                   <div className="flex justify-end gap-2">
-                    <UpdateProduct id={product.id} />
-                    <DeleteProduct id={product.id} />
+                    <UpdateSale id={sale.id} />
+                    <DeleteSale id={sale.id} />
                   </div>
                 </div>
               </div>
@@ -45,16 +56,16 @@ export default async function ProductsTable({
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
-                  Product Name
+                  Sale Code
+                </th>
+                <th scope="col" className="px-4 py-5 font-medium">
+                  Customer
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Manufacturer
+                  Status
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Price
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Quantity
+                  Total
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -62,27 +73,27 @@ export default async function ProductsTable({
               </tr>
             </thead>
             <tbody className="bg-white">
-              {products?.map((product) => (
+              {sales?.map((sale) => (
                 <tr
-                  key={product.id}
+                  key={sale.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
-                    {product.product_name}
+                    {sale.saleCode}
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <CustomerName customerId={sale.customerId} />
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {product.manufacturer}
+                    {sale.status}
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatCurrency(product.price)}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {product.stock}
+                    {sale.total}
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateProduct id={product.id} />
-                      <DeleteProduct id={product.id} />
+                      <UpdateSale id={sale.id} />
+                      <DeleteSale id={sale.id} />
                     </div>
                   </td>
                 </tr>
