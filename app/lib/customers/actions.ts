@@ -13,7 +13,7 @@ const CustomerSchema = z.object({
   phone: z.string().min(1, { message: 'Phone is required' }),
   address: z.string().min(1, { message: 'Address is required' }),
   status: z.string().min(1, { message: 'Status is required' }),
-  vehicle_plate: z.string().min(1, { message: 'Vehicle plate is required' }),
+  vehicle_plate: z.string().optional(),
   descriptions: z.string().optional(),
   date_of_birth: z.string().min(1, { message: 'Date of birth is required' }),
 });
