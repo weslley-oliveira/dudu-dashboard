@@ -14,7 +14,7 @@ export default function Page() {
           { label: 'Suppliers', href: '/dashboard/management/suppliers' },
           {
             label: 'Create Supplier',
-            href: '/dashboard/suppliers/create',
+            href: '/dashboard/management/suppliers/create',
             active: true,
           },
         ]}
