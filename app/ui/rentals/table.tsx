@@ -13,7 +13,14 @@ async function CustomerName({ customerId }: { customerId: string }) {
 
 async function VehicleName({ vehicleId }: { vehicleId: string }) {
   const vehicle = await fetchVehicleById(vehicleId);
-  return <span>{vehicle ? vehicle.make + " " + vehicle.model : 'Cliente não encontrado'}</span>;
+  return <span>{vehicle ? vehicle.make + " " + vehicle.model : 'Veículo não encontrado'}</span>;
+}
+
+async function VehicleStatus({ vehicleId }: {vehicleId: string}) {
+  const vehicle = await fetchVehicleById(vehicleId);
+  const status = vehicle ? vehicle.status : 'Veículo não encontrado';
+  const statusClass = status === 'rented' ? 'text-red-500' : 'text-green-500';
+  return <span className={statusClass}>{status}</span>;
 }
 
 export default async function RentalsTable({
@@ -77,13 +84,10 @@ export default async function RentalsTable({
                   Vehicle
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  Start Date
+                  Status
                 </th>
                 <th scope="col" className="px-3 py-5 font-medium">
-                  End Date
-                </th>
-                <th scope="col" className="px-3 py-5 font-medium">
-                  Total
+                  Payment
                 </th>
                 <th scope="col" className="relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
@@ -103,14 +107,11 @@ export default async function RentalsTable({
                     <VehicleName vehicleId={rental.vehicleId} />
                   </td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    {formatDateToLocal(rental.startDate.toISOString())}
+                    <VehicleStatus vehicleId={rental.vehicleId}/>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                  <p>{rental.endDate ? formatDateToLocal(rental.endDate.toISOString()) : "No date"}</p>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {formatCurrencyGb(rental.total)}
-                  </td>
+                  {/* <td className="whitespace-nowrap px-3 py-3">
+                    {rental.daypayment}
+                  </td> */}
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
                       <UpdateRental id={rental.id} />

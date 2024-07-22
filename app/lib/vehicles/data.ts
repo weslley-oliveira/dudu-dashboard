@@ -246,6 +246,7 @@ export const fetchVehicleData = async (vehicleId: string) => {
     const errorDetails = data.details.errorMessage || '';
     
     throw new Error(`${errorDetails}`);
+
   }
   
   return data;
@@ -260,3 +261,28 @@ export const fetchVehicleDataToSee = async (vehicleId: string) => {
   }
   return response.json();
 };
+
+export async function fetchCardDataVehicle() {
+  noStore();
+  try {
+    // You can probably combine these into a single SQL query
+    // However, we are intentionally splitting them to demonstrate
+    // how to initialize multiple queries in parallel with JS.
+    const vehicleCountPromise = sql`SELECT COUNT(*) FROM vehicles`;
+
+
+    const data = await Promise.all([
+      vehicleCountPromise
+    ]);
+
+    const numberOfVehicles = Number(data[0].rows[0].count ?? '0');
+   
+
+    return {
+      numberOfVehicles
+    };
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch card data.');
+  }
+}
