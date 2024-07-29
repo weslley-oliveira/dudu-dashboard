@@ -1,38 +1,83 @@
 'use client';
 
-import { CategoryField } from '@/app/lib/products/definitions';
+import { CompaniesField } from '@/app/lib/companies/definitions';
 import Link from 'next/link';
-import { CurrencyDollarIcon, TagIcon, ClipboardDocumentListIcon } from '@heroicons/react/24/outline';
+import {
+  UserCircleIcon,
+  CurrencyDollarIcon,
+  TagIcon,
+  IdentificationIcon,
+  CubeIcon,
+} from '@heroicons/react/24/outline';
 import { Button } from '@/app/ui/button';
 import { createProduct } from '@/app/lib/products/actions';
 import { useFormState } from 'react-dom';
+import { useState } from 'react';
+import UploadForm from '../upload/uploado-image-form';
 
-export default function ProductForm({ categories }: { categories: CategoryField[] }) {
+export default function Form({ companies }: { companies: CompaniesField[] }) {
   const initialState = { message: '', errors: {} };
   const [state, dispatch] = useFormState(createProduct, initialState);
+  const [fileUrl, setFileUrl] = useState<string | null>(null);
+
+  const handleFileUpload = (url: string) => {
+    setFileUrl(url);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  };
 
   return (
-    <form action={dispatch}>
+    <form action={dispatch} onKeyDown={handleKeyDown}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
-        {/* Product Name */}
+        {/* Description */}
         <div className="mb-4">
-          <label htmlFor="name" className="mb-2 block text-sm font-medium">
-            Product Name
+          <label htmlFor="description" className="mb-2 block text-sm font-medium">
+            Description
           </label>
           <div className="relative">
             <input
-              id="name"
-              name="name"
+              id="description"
+              name="description"
               type="text"
-              placeholder="Enter product name"
+              placeholder="Enter part description"
               className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="name-error"
+              aria-describedby="description-error"
+            />
+            <CubeIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+          </div>
+          <div id="description-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.description &&
+              state.errors.description.map((error: string) => (
+                <p className="mt-2 text-sm text-red-500" key={error}>
+                  {error}
+                </p>
+              ))}
+          </div>
+        </div>
+
+        {/* Brand */}
+        <div className="mb-4">
+          <label htmlFor="brand" className="mb-2 block text-sm font-medium">
+            Brand
+          </label>
+          <div className="relative">
+            <input
+              id="brand"
+              name="brand"
+              type="text"
+              placeholder="Enter brand name"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              aria-describedby="brand-error"
             />
             <TagIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          <div id="name-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.name &&
-              state.errors.name.map((error: string) => (
+          <div id="brand-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.brand &&
+              state.errors.brand.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
@@ -40,60 +85,169 @@ export default function ProductForm({ categories }: { categories: CategoryField[
           </div>
         </div>
 
-        {/* Product Price */}
-        <div className="mb-4">
-          <label htmlFor="price" className="mb-2 block text-sm font-medium">
-            Price
-          </label>
-          <div className="relative">
+        {/* Part Number and OEM Number */}
+        <div className="mb-4 flex gap-4">
+          <div className="flex-1">
+            <label htmlFor="partNumber" className="mb-2 block text-sm font-medium">
+              Part Number
+            </label>
+            <div className="relative">
+              <input
+                id="partNumber"
+                name="partNumber"
+                type="text"
+                placeholder="Enter part number"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="partNumber-error"
+              />
+              <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="partNumber-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.partNumber &&
+                state.errors.partNumber.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+          <div className="flex-1">
+            <label htmlFor="oemNumber" className="mb-2 block text-sm font-medium">
+              OEM Number
+            </label>
+            <div className="relative">
+              <input
+                id="oemNumber"
+                name="oemNumber"
+                type="text"
+                placeholder="Enter OEM number"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                aria-describedby="oemNumber-error"
+              />
+              <IdentificationIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            </div>
+            <div id="oemNumber-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.oemNumber &&
+                state.errors.oemNumber.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Sale Price, Quantity, and UOM */}
+        <div className="mb-4 flex gap-4">
+          <div className="flex-1">
+            <label htmlFor="salePrice" className="mb-2 block text-sm font-medium">
+              Sale Price
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <div className="relative">
+                <input
+                  id="salePrice"
+                  name="salePrice"
+                  type="number"
+                  step="0.01"
+                  placeholder="Enter price"
+                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  aria-describedby="salePrice-error"
+                />
+                <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+            </div>
+            <div id="salePrice-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.salePrice &&
+                state.errors.salePrice.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
+          </div>
+          <div className="flex-1">
+            <label htmlFor="quantity" className="mb-2 block text-sm font-medium">
+              Quantity
+            </label>
             <input
-              id="price"
-              name="price"
+              id="quantity"
+              name="quantity"
               type="number"
-              step="0.01"
-              placeholder="Enter USD price"
-              className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-              aria-describedby="price-error"
+              placeholder="Enter quantity"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
+              aria-describedby="quantity-error"
             />
-            <CurrencyDollarIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <div id="quantity-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.quantity &&
+                state.errors.quantity.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
-          <div id="price-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.price &&
-              state.errors.price.map((error: string) => (
-                <p className="mt-2 text-sm text-red-500" key={error}>
-                  {error}
-                </p>
-              ))}
+          <div className="flex-1">
+            <label htmlFor="unitOfMeasurement" className="mb-2 block text-sm font-medium">
+              UOM
+            </label>
+            <select
+              id="unitOfMeasurement"
+              name="unitOfMeasurement"
+              className="peer block w-full rounded-md border border-gray-200 py-2 pl-3 text-sm outline-2 placeholder:text-gray-500"
+              defaultValue=""
+              aria-describedby="unitOfMeasurement-error"
+            >
+              <option value="unit" disabled>Select a unit</option>
+              <option value="unit">Unit</option>
+              <option value="box">Box</option>
+              <option value="kg">Kilogram (kg)</option>
+              <option value="g">Gram (g)</option>
+              <option value="litre">Litre</option>
+              <option value="ml">Millilitre (ml)</option>
+              <option value="meter">Meter (m)</option>
+              <option value="cm">Centimeter (cm)</option>
+              <option value="inch">Inch</option>
+              <option value="foot">Foot</option>
+            </select>
+            <div id="unitOfMeasurement-error" aria-live="polite" aria-atomic="true">
+              {state.errors?.unitOfMeasurement &&
+                state.errors.unitOfMeasurement.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
+            </div>
           </div>
         </div>
 
-        {/* Product Category */}
+        {/* Company */}
         <div className="mb-4">
-          <label htmlFor="category" className="mb-2 block text-sm font-medium">
-            Category
+          <label htmlFor="companyId" className="mb-2 block text-sm font-medium">
+            {`Company${`'`}s Unit`}
           </label>
           <div className="relative">
             <select
-              id="category"
-              name="category"
+              id="companyId"
+              name="companyId"
               className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               defaultValue=""
-              aria-describedby="category-error"
+              aria-describedby="companyId-error"
             >
               <option value="" disabled>
-                Select a category
+                Select a company
               </option>
-              {categories.map((category) => (
-                <option key={category.id} value={category.id}>
-                  {category.category_name}
+              {companies.map((company) => (
+                <option key={company.id} value={company.id}>
+                  {company.name}
                 </option>
               ))}
             </select>
-            <ClipboardDocumentListIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
+            <UserCircleIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500" />
           </div>
-          <div id="category-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.category &&
-              state.errors.category.map((error: string) => (
+          <div id="companyId-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.companyId &&
+              state.errors.companyId.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
@@ -101,60 +255,23 @@ export default function ProductForm({ categories }: { categories: CategoryField[
           </div>
         </div>
 
-        {/* Product Status */}
-        <fieldset>
-          <legend className="mb-2 block text-sm font-medium">
-            Set the product status
-          </legend>
-          <div className="rounded-md border border-gray-200 bg-white px-[14px] py-3">
-            <div className="flex gap-4">
-              <div className="flex items-center">
-                <input
-                  id="available"
-                  name="status"
-                  type="radio"
-                  value="available"
-                  className="text-white-600 h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 focus:ring-2"
-                />
-                <label
-                  htmlFor="available"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-xs font-medium text-gray-600"
-                >
-                  Available
-                </label>
-              </div>
-              <div className="flex items-center">
-                <input
-                  id="unavailable"
-                  name="status"
-                  type="radio"
-                  value="unavailable"
-                  className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
-                />
-                <label
-                  htmlFor="unavailable"
-                  className="ml-2 flex cursor-pointer items-center gap-1.5 rounded-full bg-red-500 px-3 py-1.5 text-xs font-medium text-white"
-                >
-                  Unavailable
-                </label>
-              </div>
-            </div>
-          </div>
-          <div id="status-error" aria-live="polite" aria-atomic="true">
-            {state.errors?.status &&
-              state.errors.status.map((error: string) => (
+        {/* Product URL */}
+        <div className="mb-4">
+          <label htmlFor="productUrl" className="mb-2 block text-sm font-medium">
+            Photo
+          </label>
+          <UploadForm onFileUpload={handleFileUpload} />
+          <input id="productUrl" type="hidden" name="productUrl" value={String(fileUrl)} aria-describedby="productUrl-error"/>
+          <div id="productUrl-error" aria-live="polite" aria-atomic="true">
+            {state.errors?.productUrl &&
+              state.errors.productUrl.map((error: string) => (
                 <p className="mt-2 text-sm text-red-500" key={error}>
                   {error}
                 </p>
               ))}
           </div>
-        </fieldset>
-
-        <div aria-live="polite" aria-atomic="true">
-          {state.message ? (
-            <p className="mt-2 text-sm text-red-500">{state.message}</p>
-          ) : null}
         </div>
+        
       </div>
       <div className="mt-6 flex justify-end gap-4">
         <Link
