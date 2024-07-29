@@ -1,5 +1,5 @@
-import { fetchCategories } from '@/app/lib/products/data'; // Supondo que você tenha uma função para buscar categorias de produtos
-import ProductForm from '@/app/ui/products/create-form';
+import { fetchCompanies } from '@/app/lib/companies/data'; // Supondo que você tenha uma função para buscar categorias de produtos
+import Form from '@/app/ui/products/create-form';
 import Breadcrumbs from '@/app/ui/products/breadcrumbs';
 import { Metadata } from 'next';
 
@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
-  const categories = await fetchCategories();
+  const companies = await fetchCompanies();
 
   return (
     <main>
@@ -22,7 +22,7 @@ export default async function Page() {
           },
         ]}
       />
-      <ProductForm categories={categories} />
+      <Form companies={companies} />
     </main>
   );
 }
